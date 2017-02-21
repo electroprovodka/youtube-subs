@@ -9,7 +9,7 @@ def index():
 @app.route('/check_id/', methods=['GET'])
 def check_id():
     print(request.args.get('id'))
-    return json.dumps({'exist': False})
+    return json.dumps({'exist': True})
 
 
 @app.route('/post/', methods=['POST'])
