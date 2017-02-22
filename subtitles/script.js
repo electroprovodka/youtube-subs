@@ -23,7 +23,6 @@
     if (xhr.responseURL.indexOf('timedtext') === -1) {
       return;
     }
-    console.log(xhr.responseURL);
     storeSubsInStorage(xhr.responseText);
   };
 

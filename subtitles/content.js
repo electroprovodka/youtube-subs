@@ -3,7 +3,6 @@
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if( request.message === 'video_id_to_fetch' && !injected) {
-        console.log('Fetch');
         injected = true;
         var s = document.createElement('script');
         s.src = chrome.extension.getURL('script.js');

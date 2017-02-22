@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
-from .views import check_id, post_data
+from .views import check_id, post_data, search
 
 
 urlpatterns = [
     url(r'^check_id/', check_id),
-    url(r'^post/$', post_data)
+    url(r'^post/$', post_data),
+    url(r'^search/$', search),
 ]

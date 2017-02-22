@@ -127,3 +127,6 @@ STATIC_URL = '/static/'
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
 # }
+
+
+INDEX_DIR = os.path.join(BASE_DIR, 'index')

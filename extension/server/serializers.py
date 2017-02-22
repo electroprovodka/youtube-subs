@@ -1,5 +1,5 @@
 from rest_framework import serializers
 
 
-class VideoIdSerializer(serializers.Serializer):
-    exist = serializers.BooleanField()
+class SearchResultsSerializer(serializers.Serializer):
+    id = serializers.CharField(max_length=11)
