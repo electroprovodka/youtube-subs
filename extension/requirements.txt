@@ -1,0 +1,6 @@
+certifi==2017.1.23
+Django==1.10.5
+djangorestframework==3.5.4
+lxml==3.7.3
+Markdown==2.6.8
+Whoosh==2.7.4
