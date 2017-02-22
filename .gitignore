@@ -90,3 +90,6 @@ ENV/
 
 /youtube-search/
 /speedometer/
+/extension/index/
+*.idea
+*.sqlite3
