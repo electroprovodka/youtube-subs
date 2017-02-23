@@ -130,3 +130,4 @@ STATIC_URL = '/static/'
 
 
 INDEX_DIR = os.path.join(BASE_DIR, 'index')
+SEARCH_VAR = 'q'
