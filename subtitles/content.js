@@ -10,11 +10,14 @@
 
         document.addEventListener('dataTransmitEvent', function() {
           var title = document.getElementById('eow-title').textContent;
+          var description = document.getElementById('watch-description-text').textContent;
           var subs = localStorage.getItem('YOUTUBE_SUBTITLES');
           chrome.runtime.sendMessage({
             "message": "subs_fetched",
             "subs": subs,
-            "title": title});
+            "title": title,
+            "description": description
+          });
         });
       }
     }

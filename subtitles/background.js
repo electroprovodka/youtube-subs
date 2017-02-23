@@ -59,7 +59,8 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if(request.message === "subs_fetched"){
       var videoId = getVideoId(sender.tab.url);
-      var subs = request.subs, title = request.title;
+      var subs = request.subs, title = request.title,
+        descr = request.description;
       var x = createRequest(
         'POST',
         buildPath('post/'),
@@ -74,7 +75,8 @@ chrome.runtime.onMessage.addListener(
       x.send(JSON.stringify({
         "subs": subs,
         "videoId": videoId,
-        "title": title})
+        "title": title,
+        "description": descr})
       );
     }
   }
