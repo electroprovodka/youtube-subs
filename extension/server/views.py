@@ -38,7 +38,6 @@ def add_document(video_id, title, description, text):
 def search_index(query_string):
     index = open_index()
     with index.searcher() as searcher:
-        # TODO: search in description, title too
         query = MultifieldParser(['text', 'description', 'title', 'id'],
                                  index.schema, group=OrGroup).parse(query_string)
         results = searcher.search(query)
