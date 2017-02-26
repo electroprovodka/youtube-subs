@@ -1,5 +1,5 @@
 function buildPath(path) {
-  return 'http://127.0.0.1:8000/'+path
+  return 'http://127.0.0.1:8000/api/'+path
 }
 
 function getVideoId(tabUrl) {

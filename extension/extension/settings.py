@@ -131,3 +131,8 @@ STATIC_URL = '/static/'
 
 INDEX_DIR = os.path.join(BASE_DIR, 'index')
 SEARCH_VAR = 'q'
+
+
+GOOGLE_API_DEVELOPER_KEY = os.environ.get('GOOGLE_API_DEVELOPER_KEY')
+YOUTUBE_API_SERVICE_NAME = 'youtube'
+YOUTUBE_API_VERSION = 'v3'

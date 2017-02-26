@@ -6,7 +6,7 @@ from whoosh.index import exists_in, open_dir, create_in
 from whoosh.qparser import MultifieldParser, OrGroup
 from whoosh.writing import AsyncWriter
 
-from .index_schemas import YoutubeSubtitlesSchema
+from .index_schemas import YoutubeSubtitlesSchema, search_fields
 
 
 def open_index():
@@ -29,8 +29,7 @@ def add_document(video_id, title, description, subs):
 def search_index(query_string):
     index = open_index()
     with index.searcher() as searcher:
-        query = MultifieldParser(YoutubeSubtitlesSchema.search_fields,
-                                 index.schema, group=OrGroup).parse(query_string)
+        query = MultifieldParser(search_fields, index.schema, group=OrGroup).parse(query_string)
         results = searcher.search(query)
         # TODO: find better way
-        return [hit.fields() for hit in results]
+        return [hit['id'] for hit in results]

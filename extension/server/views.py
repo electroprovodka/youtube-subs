@@ -1,26 +1,21 @@
 from __future__ import unicode_literals
-from lxml import etree
-import re
 
 from django.conf import settings
-
-from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
+from .index import search_index, add_document, process_data
 from .models import Video
-from .index import search_index, add_document
-from .input_processing import process_data
 from .responses import OkResponse, BadRequestResponse
+from .youtube import get_videos_info
 
 
 @api_view(['GET'])
 def search(request):
     qs = request.GET.get(settings.SEARCH_VAR)
     if qs:
-        results = search_index(qs)
-        # TODO: get data from youtube API
-        return OkResponse({'results': results})
+        ids = search_index(qs)
+        videos_data = get_videos_info(ids)
+        return OkResponse({'data': videos_data})
     return BadRequestResponse()
 
 
