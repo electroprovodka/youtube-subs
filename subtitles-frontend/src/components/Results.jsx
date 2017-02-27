@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Image, Grid, Row, Col } from 'react-bootstrap';
-import SearchBar from './SearchBar.jsx';
 import _ from 'lodash';
+
+import actions from '../actions/actions';
+import PageLayout from './PageLayout.jsx';
+import SearchBar from './SearchBar.jsx';
+import PageTitle from './PageTitle.jsx';
 
 
 const Description = ({text}) => {
@@ -56,12 +60,26 @@ const VideosList = ({videos}) => {
 	);
 };
 
-
-export const ResultsPage = ({query, videos, onChange, onSubmit}) => {
+const TotalLenghtMessage = ({length}) => {
+	const result_word = length === 1 ? 'result': 'results';
 	return (
-    <div className="results">
-      <SearchBar query={query} onChange={onChange} onSubmit={onSubmit} />
-      <VideosList videos={videos}/>
-    </div>
+		<p><strong>{length || 0} {result_word} found:</strong></p>
 	);
 };
+
+
+const ResultsPageLayout = ({query, videos, total_length, updateQuery, submitSearch}) => {
+	return (
+		<PageLayout>
+	    <div className="results">
+				<PageTitle size="small"/>
+	      <SearchBar query={query} onChange={updateQuery} onSubmit={submitSearch} />
+				<TotalLenghtMessage length={total_length}/>
+	      <VideosList videos={videos}/>
+	    </div>
+		</PageLayout>
+	);
+};
+
+const mapStateToProps = ({query, videos, total_length}) => ({query, videos, total_length});
+export const ResultsPage = connect(mapStateToProps, actions)(ResultsPageLayout);

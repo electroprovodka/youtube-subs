@@ -10,6 +10,7 @@ const checkStatus = (response) => {
 	console.log(error); // eslint-disable-line no-console
 	throw error;
 };
+
 const callApi = ({method, url, body}) => {
 	const headers = new Headers({
 		'Content-Type': 'application/json',

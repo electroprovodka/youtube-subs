@@ -1,12 +1,24 @@
 import React from 'react';
 import { Nav, NavItem } from 'react-bootstrap';
+import { Link, browserHistory } from 'react-router';
 
-const Header = ({onPageSwitch}) => {
+
+const CustomNavItem = ({children, to, ...props}) => {
+	// TODO: move somewhere
+	const moveTo = () => browserHistory.push(to);
+	return(
+		<NavItem onClick={moveTo} {...props}>
+			{children}
+		</NavItem>
+	);
+};
+
+const Header = () => {
 	return (
     <Nav bsStyle="tabs">
-      <NavItem eventKey={1} onSelect={() => onPageSwitch('search')}>Search</NavItem>
-      <NavItem eventKey={2} onSelect={() => onPageSwitch('about')}>About</NavItem>
-      <NavItem eventKey={3} onSelect={() => onPageSwitch('contact')}>Contact</NavItem>
+      <CustomNavItem to="/">Search</CustomNavItem>
+			<CustomNavItem to="/about">About</CustomNavItem>
+			<CustomNavItem to="/contacts">Contacts</CustomNavItem>
     </Nav>
 	);
 };

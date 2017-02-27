@@ -17,9 +17,10 @@ export const sendSearchQuery = () => {
 	};
 };
 
-export const receiveSearchResults = (videos) => {
+export const receiveSearchResults = (data) => {
 	return {
 		type: RECEIVE_SEARCH_RESULTS,
-		videos
+		videos: data.videos,
+		total_length: data.total_length
 	};
 };

@@ -26,10 +26,10 @@ def add_document(video_id, title, description, subs):
     writer.commit()
 
 
-def search_index(query_string):
+def search_index(query_string, page):
     index = open_index()
     with index.searcher() as searcher:
         query = MultifieldParser(search_fields, index.schema, group=OrGroup).parse(query_string)
-        results = searcher.search(query)
+        results = searcher.search_page(query, pagenum=page)
         # TODO: find better way
-        return [hit['id'] for hit in results]
+        return results.total, [hit['id'] for hit in results]

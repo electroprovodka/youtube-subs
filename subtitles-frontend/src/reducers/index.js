@@ -11,7 +11,7 @@ export default (state, action) => {
 	case SEND_SEARCH_QUERY:
 		return {...state, loading: true};
 	case RECEIVE_SEARCH_RESULTS:
-		return {...state, loading: false, videos: action.videos};
+		return {...state, loading: false, videos: action.videos, total_length: action.total_length};
 	}
 
 	return state;

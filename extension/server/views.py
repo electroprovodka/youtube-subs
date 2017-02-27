@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+
 from rest_framework.decorators import api_view
 
 from .index import search_index, add_document, process_data
@@ -12,10 +13,11 @@ from .youtube import get_videos_info
 @api_view(['GET'])
 def search(request):
     qs = request.GET.get(settings.SEARCH_VAR)
+    page = request.GET.get(settings.PAGE_VAR) or 1
     if qs:
-        ids = search_index(qs)
+        total_length, ids = search_index(qs, page)
         videos_data = get_videos_info(ids)
-        return OkResponse({'data': videos_data})
+        return OkResponse({'data': {'videos': videos_data, 'total_length': total_length}})
     return BadRequestResponse()
 
 

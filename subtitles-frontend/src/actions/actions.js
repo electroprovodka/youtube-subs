@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router';
 import {
   updateQuery,
   sendSearchQuery,
@@ -14,8 +15,8 @@ const submitSearch = () => (dispatch, getState) => {
 	console.log(query);
 	return get('/api/search/?q='+query)
     .then(data => {
-	    console.log(data);
     	dispatch(receiveSearchResults(data));
+	    browserHistory.push('/results');
     	return data;
 });
 };

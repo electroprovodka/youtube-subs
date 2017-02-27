@@ -130,8 +130,9 @@ STATIC_URL = '/static/'
 
 
 INDEX_DIR = os.path.join(BASE_DIR, 'index')
-SEARCH_VAR = 'q'
 
+SEARCH_VAR = 'q'
+PAGE_VAR = 'page'
 
 GOOGLE_API_DEVELOPER_KEY = os.environ.get('GOOGLE_API_DEVELOPER_KEY')
 YOUTUBE_API_SERVICE_NAME = 'youtube'
