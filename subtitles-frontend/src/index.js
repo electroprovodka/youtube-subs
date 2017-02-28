@@ -10,7 +10,15 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 
 // Supply initialState if needed
-const store = createStore({'query': '', loading: false, videos: []});
+const initialState = {
+	query: '',
+	loading: false,
+	videos: [],
+	totalLength: 0,
+	page: 1,
+	totalPages: 0
+};
+const store = createStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>

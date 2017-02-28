@@ -1,7 +1,9 @@
 import {
   UPDATE_QUERY,
   SEND_SEARCH_QUERY,
-  RECEIVE_SEARCH_RESULTS
+  RECEIVE_SEARCH_RESULTS,
+  PAGE_CHANGE_RESPONSE,
+  PAGE_CHANGE_REQUEST
 } from './constants';
 
 export const updateQuery = (query) => {
@@ -21,6 +23,22 @@ export const receiveSearchResults = (data) => {
 	return {
 		type: RECEIVE_SEARCH_RESULTS,
 		videos: data.videos,
-		total_length: data.total_length
+		totalLength: data.total_length,
+		totalPages: data.total_pages
+	};
+};
+
+export const requestPageChange = (nextPage) => {
+	return {
+		type: PAGE_CHANGE_REQUEST,
+		page: nextPage
+	};
+};
+
+export const responsePageChange = (data) => {
+	return {
+		type: PAGE_CHANGE_RESPONSE,
+		videos: data.videos,
+		totalLength: data.total_length
 	};
 };

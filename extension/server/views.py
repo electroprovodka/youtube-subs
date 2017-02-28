@@ -13,11 +13,11 @@ from .youtube import get_videos_info
 @api_view(['GET'])
 def search(request):
     qs = request.GET.get(settings.SEARCH_VAR)
-    page = request.GET.get(settings.PAGE_VAR) or 1
+    page = int(request.GET.get(settings.PAGE_VAR) or 1)
     if qs:
-        total_length, ids = search_index(qs, page)
+        total_length, total_pages, ids = search_index(qs, page)
         videos_data = get_videos_info(ids)
-        return OkResponse({'data': {'videos': videos_data, 'total_length': total_length}})
+        return OkResponse({'data': {'videos': videos_data, 'total_length': total_length, 'total_pages': total_pages}})
     return BadRequestResponse()
 
 

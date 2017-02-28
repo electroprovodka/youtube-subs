@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav, NavItem } from 'react-bootstrap';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 
 const CustomNavItem = ({children, to, ...props}) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Image, Grid, Row, Col } from 'react-bootstrap';
+import { Media, Image, Grid, Row, Col, Pagination, Button } from 'react-bootstrap';
 import _ from 'lodash';
 
 import actions from '../actions/actions';
@@ -10,7 +10,7 @@ import PageTitle from './PageTitle.jsx';
 
 
 const Description = ({text}) => {
-	const newText = text.length > 100 ? text.slice(0, 97) + '...' : text;
+	const newText = text.length > 200 ? text.slice(0, 197) + '...' : text;
 	return (
     <div className="description">
       {newText}
@@ -20,14 +20,16 @@ const Description = ({text}) => {
 
 const Video = (props) => {
 	const {
-    // id,
+    id,
     title,
     description,
     thumbnail,
-    // publishDate,
-    // channelInfo,
+    publishDate,
+    channelInfo,
     // tags
   } = props;
+	// TODO: move
+	const videoUrl = 'https://YouTube.com/watch?v='+id;
 
 	return (
     <div className="video">
@@ -38,11 +40,19 @@ const Video = (props) => {
           </Col>
           <Col md={10}>
             <Row className="title">
-              {title}
+            	<Button bsStyle="link" target="_blank" href={videoUrl}><Media.Heading>{title}</Media.Heading></Button>
             </Row>
             <Row className="description">
               <Description text={description}/>
             </Row>
+						<Row className="bottom-line">
+							<Col md={3}>
+								Author: {channelInfo.name}
+							</Col>
+							<Col md={4}>
+								Published: {publishDate}
+							</Col>
+						</Row>
           </Col>
         </Row>
       </Grid>
@@ -63,23 +73,26 @@ const VideosList = ({videos}) => {
 const TotalLenghtMessage = ({length}) => {
 	const result_word = length === 1 ? 'result': 'results';
 	return (
-		<p><strong>{length || 0} {result_word} found:</strong></p>
+		<p><strong>{length} {result_word} found:</strong></p>
 	);
 };
 
-
-const ResultsPageLayout = ({query, videos, total_length, updateQuery, submitSearch}) => {
+const ResultsPageLayout = ({query, videos, totalLength, page, totalPages, updateQuery, submitSearch, requestPage}) => {
 	return (
 		<PageLayout>
 	    <div className="results">
 				<PageTitle size="small"/>
 	      <SearchBar query={query} onChange={updateQuery} onSubmit={submitSearch} />
-				<TotalLenghtMessage length={total_length}/>
+				<TotalLenghtMessage length={totalLength}/>
 	      <VideosList videos={videos}/>
+				<Pagination
+					prev next ellipsis boundaryLinks maxButtons={5}
+					activePage={page} items={totalPages} onSelect={requestPage}
+					/>
 	    </div>
 		</PageLayout>
 	);
 };
 
-const mapStateToProps = ({query, videos, total_length}) => ({query, videos, total_length});
+const mapStateToProps = ({query, videos, totalLength, page, totalPages}) => ({query, videos, totalLength, page, totalPages});
 export const ResultsPage = connect(mapStateToProps, actions)(ResultsPageLayout);
