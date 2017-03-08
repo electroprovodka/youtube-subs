@@ -21,7 +21,7 @@ def read_env():
             for line in env:
                 name, value = line.split('=', 1)
                 if name and value:
-                    os.environ.setdefault(name, value)
+                    os.environ.setdefault(name, value.strip())
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "extension.settings")

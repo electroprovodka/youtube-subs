@@ -3,7 +3,12 @@ import {
   SEND_SEARCH_QUERY,
   RECEIVE_SEARCH_RESULTS,
   PAGE_CHANGE_RESPONSE,
-  PAGE_CHANGE_REQUEST
+  PAGE_CHANGE_REQUEST,
+  LOGIN_REQUESTED,
+  LOGIN_RECEIVED,
+  LOGIN_FAILED,
+  LOGOUT_REQUESTED,
+  LOGOUT_RECEIVED
 } from './constants';
 
 export const updateQuery = (query) => {
@@ -42,3 +47,11 @@ export const responsePageChange = (data) => {
 		totalLength: data.total_length
 	};
 };
+
+export const loginRequested = () => ({type: LOGIN_REQUESTED});
+export const loginReceived = () => ({type: LOGIN_RECEIVED});
+export const loginFailed = () => ({type: LOGIN_FAILED});
+
+
+export const logoutRequested = () => ({type: LOGOUT_REQUESTED});
+export const logoutReceived = () => ({type: LOGOUT_RECEIVED});

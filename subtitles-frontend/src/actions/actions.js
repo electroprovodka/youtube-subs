@@ -1,17 +1,25 @@
 import { browserHistory } from 'react-router';
+import cookie from 'react-cookie';
+
 import {
   updateQuery,
   sendSearchQuery,
   receiveSearchResults,
   requestPageChange,
-  responsePageChange
+  responsePageChange,
+  loginRequested,
+  loginReceived,
+  loginFailed
 } from './actionCreators';
 
-import { get } from './api';
+
+import { get, post } from './api';
 
 const submitSearch = () => (dispatch, getState) => {
 	const {
-    query
+    data: {
+      query
+    }
   } = getState();
 	dispatch(sendSearchQuery());
 	console.log(query);
@@ -25,8 +33,10 @@ const submitSearch = () => (dispatch, getState) => {
 
 const requestPage = (nextPage) => (dispatch, getState) => {
 	const {
-    totalPages,
-    query
+    data: {
+      totalPages,
+      query
+    }
   } = getState();
 	if (nextPage < 0 || nextPage > totalPages) {
 		return;
@@ -42,9 +52,32 @@ const requestPage = (nextPage) => (dispatch, getState) => {
 
 };
 
+const loginSuccess = (response) => (dispatch) => {
+	const { accessToken } = response;
+	dispatch(loginRequested());
+	return post('/api/social/google-oauth2/', {access_token: accessToken})
+    .then(data => {
+      // TODO: add logout
+      // TODO: hide cookie
+	    cookie.save('youtubesubs_auth_JWT', data.token, {path: '/'});
+    	console.log(data);
+	    dispatch(loginReceived());
+    	return data;})
+    .catch(error => dispatch(loginFailed()));
+};
+
+const loginFail = (response) => (dispatch) => {
+  //TODO: do something when oauth fail
+	dispatch(loginFailed());
+	console.log('fail', response);
+	return response;
+};
+
 
 export default {
 	updateQuery,
 	submitSearch,
-	requestPage
+	requestPage,
+	loginSuccess,
+	loginFail
 };

@@ -1,12 +1,34 @@
+import {combineReducers} from 'redux';
 import {
   UPDATE_QUERY,
   SEND_SEARCH_QUERY,
   RECEIVE_SEARCH_RESULTS,
   PAGE_CHANGE_RESPONSE,
-  PAGE_CHANGE_REQUEST
+  PAGE_CHANGE_REQUEST,
+  LOGIN_REQUESTED,
+  LOGIN_RECEIVED,
+  LOGIN_FAILED,
+  LOGOUT_REQUESTED,
+  LOGOUT_RECEIVED
 } from '../actions/constants';
 
-export default (state, action) => {
+const loginReducer = (state={}, action) => {
+	switch(action.type) {
+	case LOGIN_REQUESTED:
+		return {...state, loading: true};
+	case LOGIN_RECEIVED:
+		return {...state, loading: false, isAuthenticated: true};
+	case LOGIN_FAILED:
+		return {...state, loading: false, isAuthenticated: false};
+	case LOGOUT_RECEIVED:
+		return {...state, isAuthenticated: false};
+	case LOGOUT_REQUESTED:
+		return {...state};
+	}
+	return state;
+};
+
+const defaultReducer = (state={}, action) => {
 	switch (action.type) {
 	case UPDATE_QUERY:
 		return {...state, query: action.query};
@@ -22,3 +44,8 @@ export default (state, action) => {
 
 	return state;
 };
+
+export default combineReducers({
+	user: loginReducer,
+	data: defaultReducer
+});

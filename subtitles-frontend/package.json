@@ -15,7 +15,9 @@
     "lodash": "^4.17.4",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
+    "react-cookie": "^1.0.4",
     "react-dom": "^15.4.2",
+    "react-google-login": "^2.8.2",
     "react-redux": "^5.0.3",
     "react-router": "^3.0.2",
     "redux": "^3.6.0",
@@ -26,6 +28,5 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "proxy": "http://127.0.0.1:8000"
+  }
 }

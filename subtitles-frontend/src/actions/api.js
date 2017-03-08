@@ -17,7 +17,9 @@ const callApi = ({method, url, body}) => {
 		Accept: 'application/json',
 		// 'Access-Control-Allow-Origin': '*'
 	});
-	return fetch(url, {method, body, headers})
+	// TODO: check other options: mode=cors and etc.
+	// TODO: fix include and cors when move to the same origin via nginx
+	return fetch('http://localhost:8000'+url, {method, body: JSON.stringify(body), headers, credentials:'include', mode:'cors'})
     .then(checkStatus)
     .then(response => response.json())
     .then(response => response.data);

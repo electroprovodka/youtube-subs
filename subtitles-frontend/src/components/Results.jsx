@@ -94,5 +94,5 @@ const ResultsPageLayout = ({query, videos, totalLength, page, totalPages, update
 	);
 };
 
-const mapStateToProps = ({query, videos, totalLength, page, totalPages}) => ({query, videos, totalLength, page, totalPages});
+const mapStateToProps = ({data: {query, videos, totalLength, page, totalPages}}) => ({query, videos, totalLength, page, totalPages});
 export const ResultsPage = connect(mapStateToProps, actions)(ResultsPageLayout);
