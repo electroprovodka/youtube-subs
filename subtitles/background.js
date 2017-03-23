@@ -35,10 +35,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
         buildPath('check_id/?id='+videoId),
         function() {
           var data = JSON.parse(this.responseText);
-          if(data['exist'] === false){
+          if(data.data['exist'] === false){
             chrome.tabs.sendMessage(tabId, {"message": "video_id_to_fetch"});
           }
-          else if(data['exist'] === true) {
+          else if(data.data['exist'] === true) {
             // TODO: change icon color
             console.log('exists');
           }
@@ -73,8 +73,8 @@ chrome.runtime.onMessage.addListener(
       );
       x.setRequestHeader("Content-Type", "application/json");
       x.send(JSON.stringify({
-        "subs": subs,
-        "videoId": videoId,
+        "text": subs,
+        "video_id": videoId,
         "title": title,
         "description": descr})
       );

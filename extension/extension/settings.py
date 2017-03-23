@@ -59,13 +59,14 @@ MIDDLEWARE = [
 ]
 
 # TODO: change when move to the same origin (nginx)
-CORS_ORIGIN_WHITELIST = [
-    'localhost:3000',
-    '127.0.0.1:3000',
-]
-
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = [
+#     'localhost:3000',
+#     '127.0.0.1:3000',
+# ]
+#
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
+# CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
 
 ROOT_URLCONF = 'extension.urls'
 
@@ -151,10 +152,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'server.auth_helper.JWTAuth',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
 
     ],
     'DEFAULT_PERMISSION_CLASSES': [
+        # TODO: think if we need this
         'rest_framework.permissions.IsAuthenticated'
     ]
 }

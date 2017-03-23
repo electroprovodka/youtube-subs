@@ -18,11 +18,11 @@ def open_index():
     return create_in(settings.INDEX_DIR, YoutubeSubtitlesSchema)
 
 
-def add_document(video_id, title, description, subs):
+def add_document(video_id, title, description, text):
     # TODO: check
     index = open_index()
     writer = AsyncWriter(index)
-    writer.add_document(text=subs, title=title, id=video_id, description=description)
+    writer.add_document(text=text, title=title, id=video_id, description=description)
     writer.commit()
 
 
@@ -31,5 +31,4 @@ def search_index(query_string, page):
     with index.searcher() as searcher:
         query = MultifieldParser(search_fields, index.schema, group=OrGroup).parse(query_string)
         results = searcher.search_page(query, pagenum=page)
-        # TODO: find better way
         return results.total, results.pagecount, [hit['id'] for hit in results]

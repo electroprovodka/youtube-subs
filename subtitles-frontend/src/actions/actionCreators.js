@@ -8,7 +8,8 @@ import {
   LOGIN_RECEIVED,
   LOGIN_FAILED,
   LOGOUT_REQUESTED,
-  LOGOUT_RECEIVED
+  LOGOUT_RECEIVED,
+  CLEAR_VIDEOS
 } from './constants';
 
 export const updateQuery = (query) => {
@@ -55,3 +56,6 @@ export const loginFailed = () => ({type: LOGIN_FAILED});
 
 export const logoutRequested = () => ({type: LOGOUT_REQUESTED});
 export const logoutReceived = () => ({type: LOGOUT_RECEIVED});
+
+
+export const clearVideos = () => ({type: CLEAR_VIDEOS})

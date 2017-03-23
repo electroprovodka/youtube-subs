@@ -1,26 +1,37 @@
 import React from 'react';
-import { Nav, NavItem } from 'react-bootstrap';
-import { browserHistory } from 'react-router';
+import {connect} from 'react-redux';
+import { Nav, NavItem, Col, Row } from 'react-bootstrap';
+
+import { moveTo, clearVideosState } from '../actions/actions'
+
+import Auth from './Auth.jsx'
 
 
-const CustomNavItem = ({children, to, ...props}) => {
-	// TODO: move somewhere
-	const moveTo = () => browserHistory.push(to);
+const CustomNavItemLayout = ({children, to, moveTo, handleClick, ...props}) => {
 	return(
-		<NavItem onClick={moveTo} {...props}>
+		<NavItem onClick={(e) => moveTo(to, handleClick)} {...props}>
 			{children}
 		</NavItem>
 	);
 };
 
-const Header = () => {
+const CustomNavItem = connect((state, ownProps)=>({...ownProps}), {moveTo})(CustomNavItemLayout)
+
+const Header = ({clearVideosState}) => {
 	return (
-    <Nav bsStyle="tabs">
-      <CustomNavItem to="/">Search</CustomNavItem>
-			<CustomNavItem to="/about">About</CustomNavItem>
-			<CustomNavItem to="/contacts">Contacts</CustomNavItem>
-    </Nav>
+		<Row>
+			<Col xs={11}>
+		    <Nav bsStyle="tabs">
+		      <CustomNavItem to="/" handleClick={clearVideosState}>Search</CustomNavItem>
+					<CustomNavItem to="/about">About</CustomNavItem>
+					<CustomNavItem to="/contacts">Contacts</CustomNavItem>
+		    </Nav>
+			</Col>
+			<Col xs={1}>
+				<Auth/>
+			</Col>
+		</Row>
 	);
 };
 
-export default Header;
+export default connect(null, {clearVideosState})(Header)

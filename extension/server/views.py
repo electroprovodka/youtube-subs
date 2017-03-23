@@ -18,6 +18,7 @@ from .youtube import get_videos_info
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 @handle_response(error_mapping={
     InvalidRequestError: 400
 })
@@ -32,6 +33,7 @@ def search(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 @handle_response()
 def check_id(request):
     # TODO: enhance logic
@@ -44,6 +46,7 @@ def check_id(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 @handle_response(error_mapping={
     InvalidRequestError: 400
 })
@@ -51,7 +54,7 @@ def post_data(request):
     subs_data = SubsSerializer(data=request.data)
     if subs_data.is_valid():
         data = subs_data.validated_data
-        video_id = data['videoId']
+        video_id = data['video_id']
         if not Video.objects.filter(youtube_id=video_id).exists():
             data = process_data(data)
 

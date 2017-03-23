@@ -1,12 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { FormGroup, InputGroup, FormControl, Glyphicon } from 'react-bootstrap';
 
-const SearchBar = ({query, onChange, onSubmit}) => {
+import actions from '../actions/actions'
+
+const SearchBar = ({query, updateQuery, submitSearch}) => {
 	return (<div>
 		<FormGroup>
 			<InputGroup>
-				<FormControl type="text" value={query} onChange={(e) => onChange(e.target.value)}/>
-				<InputGroup.Addon onClick={(e) => onSubmit()}>
+				<FormControl type="text" value={query} onChange={(e) => updateQuery(e.target.value)}/>
+				<InputGroup.Addon onClick={submitSearch}>
 					<Glyphicon glyph="search"/>
 				</InputGroup.Addon>
 			</InputGroup>
@@ -14,5 +18,5 @@ const SearchBar = ({query, onChange, onSubmit}) => {
 	</div>);
 };
 
-
-export default SearchBar;
+const mapStateToProps = ({data: {query}}) => ({query});
+export default connect(mapStateToProps, actions)(SearchBar);

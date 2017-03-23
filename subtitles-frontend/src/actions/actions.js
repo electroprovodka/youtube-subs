@@ -9,9 +9,12 @@ import {
   responsePageChange,
   loginRequested,
   loginReceived,
-  loginFailed
+  loginFailed,
+  logoutRequested,
+  logoutReceived,
+  clearVideos
 } from './actionCreators';
-
+import { AUTH_COOKIE_NAME } from '../constants'
 
 import { get, post } from './api';
 
@@ -21,12 +24,15 @@ const submitSearch = () => (dispatch, getState) => {
       query
     }
   } = getState();
+  if (!query) {
+    // TODO: handle empty search bar
+    return;
+  }
 	dispatch(sendSearchQuery());
 	console.log(query);
 	return get('/api/search/?q='+query)
     .then(data => {
     	dispatch(receiveSearchResults(data));
-	    browserHistory.push('/results');
     	return data;
 });
 };
@@ -57,9 +63,7 @@ const loginSuccess = (response) => (dispatch) => {
 	dispatch(loginRequested());
 	return post('/api/social/google-oauth2/', {access_token: accessToken})
     .then(data => {
-      // TODO: add logout
-      // TODO: hide cookie
-	    cookie.save('youtubesubs_auth_JWT', data.token, {path: '/'});
+	    cookie.save(AUTH_COOKIE_NAME, data.token, {path: '/'});
     	console.log(data);
 	    dispatch(loginReceived());
     	return data;})
@@ -73,11 +77,33 @@ const loginFail = (response) => (dispatch) => {
 	return response;
 };
 
+const logout = () => (dispatch) => {
+  dispatch(logoutRequested())
+  cookie.remove(AUTH_COOKIE_NAME, {path: '/'});
+  return dispatch(logoutReceived())
+};
+
+export const moveTo = (destination, callback) => (dispatch, getState) => {
+  browserHistory.push(destination);
+  if (dispatch && callback) {
+    return callback(dispatch, getState);
+  }
+}
+
+
+export const clearVideosState = (dispatch) => {
+  return dispatch(clearVideos());
+}
+
+
+export const userActions = {
+  loginSuccess,
+  loginFail,
+  logout
+}
 
 export default {
 	updateQuery,
 	submitSearch,
 	requestPage,
-	loginSuccess,
-	loginFail
 };

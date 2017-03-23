@@ -6,7 +6,7 @@ from lxml import etree
 
 __all__ = ['process_data']
 
-data_keys = ['subs', 'title', 'description']
+data_keys = ['text', 'title', 'description']
 
 
 def extract_data(data):

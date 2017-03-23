@@ -8,6 +8,8 @@ import PageLayout from './PageLayout.jsx';
 import SearchBar from './SearchBar.jsx';
 import PageTitle from './PageTitle.jsx';
 
+import {getYoutubeUrl} from '../utils';
+
 
 const Description = ({text}) => {
 	const newText = text.length > 200 ? text.slice(0, 197) + '...' : text;
@@ -28,8 +30,7 @@ const Video = (props) => {
     channelInfo,
     // tags
   } = props;
-	// TODO: move
-	const videoUrl = 'https://YouTube.com/watch?v='+id;
+	const videoUrl = getYoutubeUrl(id);
 
 	return (
     <div className="video">
@@ -95,4 +96,4 @@ const ResultsPageLayout = ({query, videos, totalLength, page, totalPages, update
 };
 
 const mapStateToProps = ({data: {query, videos, totalLength, page, totalPages}}) => ({query, videos, totalLength, page, totalPages});
-export const ResultsPage = connect(mapStateToProps, actions)(ResultsPageLayout);
+export default connect(mapStateToProps, actions)(ResultsPageLayout);

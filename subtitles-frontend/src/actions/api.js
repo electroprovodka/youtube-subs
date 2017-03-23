@@ -1,9 +1,11 @@
+import {API_HOST} from '../constants'
 // TODO: enchance
 
 const checkStatus = (response) => {
 	if (response.status >= 200 && response.status < 300) {
 		return response;
 	}
+	// TODO: handle 401 - when token expires - remove cookie
 	const error = new Error(`HTTP Error ${response.statusText}`);
 	error.status = response.statusText;
 	error.response = response;
@@ -19,7 +21,7 @@ const callApi = ({method, url, body}) => {
 	});
 	// TODO: check other options: mode=cors and etc.
 	// TODO: fix include and cors when move to the same origin via nginx
-	return fetch('http://localhost:8000'+url, {method, body: JSON.stringify(body), headers, credentials:'include', mode:'cors'})
+	return fetch(API_HOST+url, {method, body: JSON.stringify(body), headers, credentials:'include', mode:'cors'})
     .then(checkStatus)
     .then(response => response.json())
     .then(response => response.data);
