@@ -15,11 +15,14 @@ import {
   CLEAR_VIDEOS
 } from '../actions/constants';
 
+import AUTH_COOKIE_NAME from '../constants'
+
 import { defaultDataState, defaultUserState} from '../constants'
 // TODO: move to other location
 const get_default_user_state = () => {
-  const token = cookie.select(/youtubesubs_auth_JWT/);
-  return {...defaultUserState, authenticated: typeof token !== undefined};
+  const token = cookie.load(AUTH_COOKIE_NAME);
+  console.log(token);
+  return {...defaultUserState, authenticated: typeof token !== 'undefined'};
 }
 
 const defaultLoginState = get_default_user_state()

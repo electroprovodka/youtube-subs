@@ -157,7 +157,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         # TODO: think if we need this
-        'rest_framework.permissions.IsAuthenticated'
+        # 'rest_framework.permissions.IsAuthenticated'
     ]
 }
 
@@ -192,8 +192,12 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
+JWT_COOKIE_KEY = 'youtubesubs_auth_JWT'
+
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=20)
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=20),
+    # 'JWT_VERIFY_EXPIRATION': True,
+    # JWT_LEEWAY: 100 s
+    'JWT_AUTH_COOKIE': JWT_COOKIE_KEY
 }
 
-JWT_COOKIE_KEY = 'youtubesubs_auth_JWT'

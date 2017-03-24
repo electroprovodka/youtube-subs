@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django.conf import settings
 
 from rest_framework_jwt.authentication import BaseJSONWebTokenAuthentication
@@ -20,8 +22,8 @@ def get_new_json_token(user):
 
 
 def refresh_jwt(func):
+    @wraps(func)
     def inner(request, *args, **kwargs):
-
         response = func(request, *args, **kwargs)
         # TODO: check for anon user
         user = request.user

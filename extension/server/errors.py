@@ -2,9 +2,10 @@ class ApiError(BaseException):
     error_type = 'APIError'
     message = 'Api error'
 
-    def __init__(self, message, *args, **kwargs):
+    def __init__(self, message=None, *args, **kwargs):
         super(ApiError, self).__init__(*args, **kwargs)
-        self.message = message
+        if message:
+            self.message = message
 
 
 class NotFoundError(ApiError):

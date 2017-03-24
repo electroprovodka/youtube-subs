@@ -18,7 +18,8 @@ from .youtube import get_videos_info
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
+@refresh_jwt
 @handle_response(error_mapping={
     InvalidRequestError: 400
 })
@@ -33,7 +34,7 @@ def search(request):
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 @handle_response()
 def check_id(request):
     # TODO: enhance logic
@@ -46,7 +47,7 @@ def check_id(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 @handle_response(error_mapping={
     InvalidRequestError: 400
 })
@@ -65,7 +66,7 @@ def post_data(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 @psa()
 # TODO: change error codes
 @handle_response(error_mapping={
@@ -85,4 +86,9 @@ def exchange_oauth2_token(request, backend):
             raise AuthenticationFailedError(message='Bad user. I do not know what to place here')
     else:
         raise InvalidRequestError()
+
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def exchange_token
 
