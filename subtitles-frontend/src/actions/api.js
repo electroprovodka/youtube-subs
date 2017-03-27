@@ -1,10 +1,19 @@
-import {API_HOST} from '../constants'
+import cookie from 'react-cookie';
+
+import {API_HOST, AUTH_COOKIE_NAME} from '../constants'
+
 // TODO: enchance
+
+export const getAuthCookie = () => cookie.load(AUTH_COOKIE_NAME);
+// TODO: check 'path'
+export const setAuthCookie = (value) => {cookie.save(AUTH_COOKIE_NAME, value, {path: '/'});}
+export const removeAuthCookie = () => {cookie.remove(AUTH_COOKIE_NAME, {path: '/'})}
 
 const checkStatus = (response) => {
 	if (response.status >= 200 && response.status < 300) {
 		return response;
 	}
+
 	// TODO: handle 401 - when token expires - remove cookie
 	const error = new Error(`HTTP Error ${response.statusText}`);
 	error.status = response.statusText;

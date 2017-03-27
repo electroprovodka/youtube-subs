@@ -1,12 +1,11 @@
 import { browserHistory } from 'react-router';
-import cookie from 'react-cookie';
 
 import {
   updateQuery,
-  sendSearchQuery,
-  receiveSearchResults,
-  requestPageChange,
-  responsePageChange,
+  searchRequested,
+  searchReceived,
+  pageChangeRequested,
+  pageChangeReceived,
   loginRequested,
   loginReceived,
   loginFailed,
@@ -14,9 +13,8 @@ import {
   logoutReceived,
   clearVideos
 } from './actionCreators';
-import { AUTH_COOKIE_NAME } from '../constants'
 
-import { get, post } from './api';
+import { get, post, setAuthCookie, removeAuthCookie } from './api';
 
 const submitSearch = () => (dispatch, getState) => {
 	const {
@@ -28,13 +26,13 @@ const submitSearch = () => (dispatch, getState) => {
     // TODO: handle empty search bar
     return;
   }
-	dispatch(sendSearchQuery());
+	dispatch(searchRequested());
 	console.log(query);
 	return get('/api/search/?q='+query)
     .then(data => {
-    	dispatch(receiveSearchResults(data));
+    	dispatch(searchReceived(data));
     	return data;
-});
+  });
 };
 
 const requestPage = (nextPage) => (dispatch, getState) => {
@@ -47,15 +45,14 @@ const requestPage = (nextPage) => (dispatch, getState) => {
 	if (nextPage < 0 || nextPage > totalPages) {
 		return;
 	}
-	dispatch(requestPageChange(nextPage));
+	dispatch(pageChangeRequested(nextPage));
   // TODO: what if we change query but not submit and then change page
   // TODO: find other way to add params
 	return get('/api/search/?q='+query+'&page='+nextPage)
     .then(data=> {
-    	dispatch(responsePageChange(data));
+    	dispatch(pageChangeReceived(data));
     	return data;
-});
-
+  });
 };
 
 const loginSuccess = (response) => (dispatch) => {
@@ -63,10 +60,11 @@ const loginSuccess = (response) => (dispatch) => {
 	dispatch(loginRequested());
 	return post('/api/social/google-oauth2/', {access_token: accessToken})
     .then(data => {
-	    cookie.save(AUTH_COOKIE_NAME, data.token, {path: '/'});
+	    setAuthCookie(data.token);
     	console.log(data);
 	    dispatch(loginReceived());
-    	return data;})
+    	return data;
+    })
     .catch(error => dispatch(loginFailed()));
 };
 
@@ -79,7 +77,7 @@ const loginFail = (response) => (dispatch) => {
 
 const logout = () => (dispatch) => {
   dispatch(logoutRequested())
-  cookie.remove(AUTH_COOKIE_NAME, {path: '/'});
+  removeAuthCookie();
   return dispatch(logoutReceived())
 };
 
@@ -90,11 +88,9 @@ export const moveTo = (destination, callback) => (dispatch, getState) => {
   }
 }
 
-
 export const clearVideosState = (dispatch) => {
   return dispatch(clearVideos());
 }
-
 
 export const userActions = {
   loginSuccess,

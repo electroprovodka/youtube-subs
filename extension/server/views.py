@@ -88,7 +88,9 @@ def exchange_oauth2_token(request, backend):
         raise InvalidRequestError()
 
 
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def exchange_token
+@api_view(['GET'])
+@handle_response()
+def check_token_expired(request):
+    # TODO: for now request will not reach this code unless it is still valid
+    return {'expired': False}
 

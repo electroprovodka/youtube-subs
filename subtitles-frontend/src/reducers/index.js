@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
-import cookie from 'react-cookie';
 
+import { getAuthCookie } from '../actions/api';
 import {
   UPDATE_QUERY,
-  SEND_SEARCH_QUERY,
-  RECEIVE_SEARCH_RESULTS,
-  PAGE_CHANGE_RESPONSE,
-  PAGE_CHANGE_REQUEST,
+  SEARCH_REQUESTED,
+  SEARCH_RECEIVED,
+  PAGE_CHANGE_RECEIVED,
+  PAGE_CHANGE_REQUESTED,
   LOGIN_REQUESTED,
   LOGIN_RECEIVED,
   LOGIN_FAILED,
@@ -14,17 +14,14 @@ import {
   LOGOUT_RECEIVED,
   CLEAR_VIDEOS
 } from '../actions/constants';
-
-import AUTH_COOKIE_NAME from '../constants'
-
 import { defaultDataState, defaultUserState} from '../constants'
+
 // TODO: move to other location
 const get_default_user_state = () => {
-  const token = cookie.load(AUTH_COOKIE_NAME);
+  const token = getAuthCookie();
   console.log(token);
   return {...defaultUserState, authenticated: typeof token !== 'undefined'};
 }
-
 const defaultLoginState = get_default_user_state()
 
 const loginReducer = (state=defaultLoginState, action) => {
@@ -48,13 +45,13 @@ const defaultReducer = (state=defaultDataState, action) => {
 	switch (action.type) {
 	case UPDATE_QUERY:
 		return {...state, query: action.query};
-	case SEND_SEARCH_QUERY:
+	case SEARCH_REQUESTED:
 		return {...state, loading: true};
-	case RECEIVE_SEARCH_RESULTS:
+	case SEARCH_RECEIVED:
 		return {...state, loading: false, videos: action.videos, totalLength: action.totalLength, totalPages: action.totalPages};
-	case PAGE_CHANGE_REQUEST:
+	case PAGE_CHANGE_REQUESTED:
 		return {...state, loading: true, page: action.page};
-	case PAGE_CHANGE_RESPONSE:
+	case PAGE_CHANGE_RECEIVED:
 		return {...state, loading: false, videos: action.videos, totalLength: action.totalLength};
   case CLEAR_VIDEOS:
     return {...state, ...defaultDataState};

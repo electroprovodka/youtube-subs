@@ -1,9 +1,9 @@
 import {
   UPDATE_QUERY,
-  SEND_SEARCH_QUERY,
-  RECEIVE_SEARCH_RESULTS,
-  PAGE_CHANGE_RESPONSE,
-  PAGE_CHANGE_REQUEST,
+  SEARCH_REQUESTED,
+  SEARCH_RECEIVED,
+  PAGE_CHANGE_RECEIVED,
+  PAGE_CHANGE_REQUESTED,
   LOGIN_REQUESTED,
   LOGIN_RECEIVED,
   LOGIN_FAILED,
@@ -19,31 +19,31 @@ export const updateQuery = (query) => {
 	};
 };
 
-export const sendSearchQuery = () => {
+export const searchRequested = () => {
 	return {
-		type: SEND_SEARCH_QUERY
+		type: SEARCH_REQUESTED
 	};
 };
 
-export const receiveSearchResults = (data) => {
+export const searchReceived = (data) => {
 	return {
-		type: RECEIVE_SEARCH_RESULTS,
+		type: SEARCH_RECEIVED,
 		videos: data.videos,
 		totalLength: data.total_length,
 		totalPages: data.total_pages
 	};
 };
 
-export const requestPageChange = (nextPage) => {
+export const pageChangeRequested = (nextPage) => {
 	return {
-		type: PAGE_CHANGE_REQUEST,
+		type: PAGE_CHANGE_REQUESTED,
 		page: nextPage
 	};
 };
 
-export const responsePageChange = (data) => {
+export const pageChangeReceived = (data) => {
 	return {
-		type: PAGE_CHANGE_RESPONSE,
+		type: PAGE_CHANGE_RECEIVED,
 		videos: data.videos,
 		totalLength: data.total_length
 	};
