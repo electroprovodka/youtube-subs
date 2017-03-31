@@ -21,6 +21,7 @@ def create_previews():
     # TODO: handle errors
     # TODO: prevent simultaneous execution of this task
     videos = Video.objects.filter(preview_created=False)
+    # TODO: is n+1 ?
     for video in videos:
         try:
             url = create_preview(video.youtube_id)

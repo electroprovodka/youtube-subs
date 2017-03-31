@@ -1,4 +1,5 @@
 import React from 'react';
+import { Player, ControlBar, BigPlayButton, LoadingSpinner } from 'video-react';
 import { connect } from 'react-redux';
 import { Media, Image, Grid, Row, Col, Pagination, Button } from 'react-bootstrap';
 import _ from 'lodash';
@@ -20,6 +21,54 @@ const Description = ({text}) => {
 	);
 };
 
+class VideoPreview extends React.Component {
+	constructor() {
+		super();
+		this.state = {
+			isHovering: false
+		};
+
+		this.handleMouseOver = this.handleMouseOver.bind(this);
+		this.handleMouseOut = this.handleMouseOut.bind(this);
+	}
+
+	handleMouseOver() {
+		this.setState({ isHovering: true });
+	}
+
+	handleMouseOut() {
+		this.setState({ isHovering: false });
+	}
+
+	render() {
+		const {
+			thumbnail,
+			preview
+		} = this.props
+
+		return (
+			<div className="video-preview"
+				onMouseOver={this.handleMouseOver}
+				onMouseOut={this.handleMouseOut}>
+				{
+					this.state.isHovering && preview.exist
+					? <Player loop autoPlay playsInline
+						poster={thumbnail.url}
+						height={480}
+						>
+							<source src={preview.url} type="video/webm"></source>
+							<LoadingSpinner />
+							<BigPlayButton disabled />
+							<ControlBar disabled/>
+						</Player>
+					: <Image width={256} height={256}
+						ref={'VideoThumb'} src={thumbnail.url} thumbnail responsive />
+				}
+			</div>
+		);
+	}
+}
+
 const Video = (props) => {
 	const {
     id,
@@ -28,20 +77,22 @@ const Video = (props) => {
     thumbnail,
     publishDate,
     channelInfo,
+		preview
     // tags
   } = props;
 	const videoUrl = getYoutubeUrl(id);
-
 	return (
     <div className="video">
       <Grid>
         <Row>
           <Col md={2}>
-            <Image src={thumbnail.url} thumbnail responsive/>
+            <VideoPreview thumbnail={thumbnail} preview={preview}/>
           </Col>
           <Col md={10}>
             <Row className="title">
-            	<Button bsStyle="link" target="_blank" href={videoUrl}><Media.Heading>{title}</Media.Heading></Button>
+            	<Button bsStyle="link" target="_blank" href={videoUrl}>
+								<Media.Heading>{title}</Media.Heading>
+							</Button>
             </Row>
             <Row className="description">
               <Description text={description}/>

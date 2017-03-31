@@ -27,8 +27,8 @@ def refresh_jwt(func):
         response = func(request, *args, **kwargs)
         # TODO: check for anon user
         user = request.user
-
-        token = get_new_json_token(user)
-        response.set_cookie(settings.JWT_COOKIE_KEY, token)
+        if user.is_authenticated():
+            token = get_new_json_token(user)
+            response.set_cookie(settings.JWT_COOKIE_KEY, token)
         return response
     return inner

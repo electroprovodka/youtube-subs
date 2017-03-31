@@ -41,7 +41,7 @@ def get_videos_info(ids):
         video['publishDate'] = snippet['publishedAt']
         # TODO: determine what size should I use
         video['thumbnail'] = snippet['thumbnails']['medium']
-        video['preview'] = zip(['preview_created', 'preview_url'], preview)
+        video['preview'] = dict(zip(['exist', 'url'], preview))
         videos.append(video)
 
     return videos
