@@ -1,5 +1,5 @@
 import React from 'react';
-import { Player, ControlBar, BigPlayButton, LoadingSpinner } from 'video-react';
+// import { Player, ControlBar, BigPlayButton, LoadingSpinner } from 'video-react';
 import { connect } from 'react-redux';
 import { Media, Image, Grid, Row, Col, Pagination, Button } from 'react-bootstrap';
 import _ from 'lodash';
@@ -44,25 +44,30 @@ class VideoPreview extends React.Component {
 		const {
 			thumbnail,
 			preview
-		} = this.props
+		} = this.props;
 
 		return (
 			<div className="video-preview"
 				onMouseOver={this.handleMouseOver}
 				onMouseOut={this.handleMouseOut}>
 				{
+					// TODO: move to separate components
 					this.state.isHovering && preview.exist
-					? <Player loop autoPlay playsInline
-						poster={thumbnail.url}
-						height={480}
-						>
-							<source src={preview.url} type="video/webm"></source>
-							<LoadingSpinner />
-							<BigPlayButton disabled />
-							<ControlBar disabled/>
-						</Player>
+					? <video loop autoPlay width={256} height={256}
+						poster={thumbnail.url}>
+						<source src={preview.url} type="video/webm"></source>
+					</video>
+					// <Player loop autoPlay playsInline
+					// 	poster={thumbnail.url}
+					// 	height={480}
+					// 	>
+					// 		<source src={preview.url} type="video/webm"></source>
+					// 		<LoadingSpinner />
+					// 		<BigPlayButton disabled />
+					// 		<ControlBar disabled/>
+					// 	</Player>
 					: <Image width={256} height={256}
-						ref={'VideoThumb'} src={thumbnail.url} thumbnail responsive />
+						src={thumbnail.url} thumbnail responsive />
 				}
 			</div>
 		);

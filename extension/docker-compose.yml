@@ -1,0 +1,79 @@
+version: '2'
+
+services:
+  # PostgreSQL database
+  db:
+    image: postgres:9.4
+    hostname: db
+    env_file: .env
+    ports:
+      - "5432:5432"
+
+  # RabbitMQ
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3.6.0
+    ports:
+      - "5673:5672"  # we forward this port because it's useful for debugging
+      - "15673:15672"  # here, we can access rabbitmq management plugin
+
+  # Django web server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    hostname: backend
+    env_file: .env
+    command: ./run_server.sh
+    volumes:
+      - .:/app  # mount current directory inside container
+    ports:
+      - "8000:8000"
+    # set up links so that web knows about db, rabbit and redis
+    links:
+      - db
+      - rabbit
+    depends_on:
+      - db
+
+  # Celery worker
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./run_celery.sh
+    ports:
+      - "5556:5555"
+    volumes:
+      - .:/app
+    links:
+      - db
+      - rabbit
+    depends_on:
+      - rabbit
+
+  # Frontend container (static React files, index.html and bundle.js, served with nginx)
+  frontend:
+    build: ../subtitles-frontend
+    volumes:
+      - ../subtitles-frontend:/app/frontend
+    container_name: frontend
+    hostname: frontend
+#    working_dir: /app/frontend
+    links:
+      - backend
+
+  # This container sits in front of the others,
+  # I need it because both frontend and backend containers
+  # can't connect to the port 80 at the same time
+  nginx_proxy:
+    build: ./configs/nginx
+    container_name: nginx_proxy
+    # See the file nginx_proxy.conf
+    # It uses these links to connect you to the two containers
+    links:
+      - backend
+      - frontend
+    ports:
+      - '80:80'

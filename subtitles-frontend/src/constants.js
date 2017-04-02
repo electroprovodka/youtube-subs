@@ -5,17 +5,17 @@ export const defaultDataState = {
 	totalLength: 0,
 	page: 1,
 	totalPages: 0
-}
+};
 
 export const defaultUserState = {
-  loading: false,
-  authenticated: false
-}
+	loading: false,
+	authenticated: false
+};
 
-export const YOUTUBE_VIDEO_URL = 'https://YouTube.com/watch?v='
+export const YOUTUBE_VIDEO_URL = 'https://YouTube.com/watch?v=';
 
-export const API_HOST = 'http://localhost:8000';
-export const FRONTEND_HOST = 'http://localhost:3000';
+export const API_HOST = 'backend';
+export const FRONTEND_HOST = '127.0.0.1';
 
 export const GOOGLE_CLIENT_ID = '790338504567-lvr7lrt2oe9lk1mn4ba05faulr4ujbja.apps.googleusercontent.com';
 

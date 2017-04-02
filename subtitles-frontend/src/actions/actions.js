@@ -22,17 +22,17 @@ const submitSearch = () => (dispatch, getState) => {
       query
     }
   } = getState();
-  if (!query) {
+	if (!query) {
     // TODO: handle empty search bar
-    return;
-  }
+		return;
+	}
 	dispatch(searchRequested());
 	console.log(query);
-	return get('/api/search/?q='+query)
+	return get('/api/search/', {q:query})
     .then(data => {
     	dispatch(searchReceived(data));
     	return data;
-  });
+});
 };
 
 const requestPage = (nextPage) => (dispatch, getState) => {
@@ -48,11 +48,11 @@ const requestPage = (nextPage) => (dispatch, getState) => {
 	dispatch(pageChangeRequested(nextPage));
   // TODO: what if we change query but not submit and then change page
   // TODO: find other way to add params
-	return get('/api/search/?q='+query+'&page='+nextPage)
+	return get('/api/search/', {q: query, page: nextPage})
     .then(data=> {
     	dispatch(pageChangeReceived(data));
     	return data;
-  });
+});
 };
 
 const loginSuccess = (response) => (dispatch) => {
@@ -64,7 +64,7 @@ const loginSuccess = (response) => (dispatch) => {
     	console.log(data);
 	    dispatch(loginReceived());
     	return data;
-    })
+})
     .catch(error => dispatch(loginFailed()));
 };
 
@@ -76,27 +76,27 @@ const loginFail = (response) => (dispatch) => {
 };
 
 const logout = () => (dispatch) => {
-  dispatch(logoutRequested())
-  removeAuthCookie();
-  return dispatch(logoutReceived())
+	dispatch(logoutRequested());
+	removeAuthCookie();
+	return dispatch(logoutReceived());
 };
 
 export const moveTo = (destination, callback) => (dispatch, getState) => {
-  browserHistory.push(destination);
-  if (dispatch && callback) {
-    return callback(dispatch, getState);
-  }
-}
+	browserHistory.push(destination);
+	if (dispatch && callback) {
+		return callback(dispatch, getState);
+	}
+};
 
 export const clearVideosState = (dispatch) => {
-  return dispatch(clearVideos());
-}
+	return dispatch(clearVideos());
+};
 
 export const userActions = {
-  loginSuccess,
-  loginFail,
-  logout
-}
+	loginSuccess,
+	loginFail,
+	logout
+};
 
 export default {
 	updateQuery,

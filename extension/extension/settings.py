@@ -48,14 +48,14 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'social_django',
     'rest_framework_social_oauth2',
-    'corsheaders',
+    # 'corsheaders',
     'django_celery_beat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,13 +65,13 @@ MIDDLEWARE = [
 ]
 
 # TODO: change when move to the same origin (nginx)
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = [
 #     'localhost:3000',
 #     '127.0.0.1:3000',
 # ]
 #
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 # CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
 
 ROOT_URLCONF = 'extension.urls'
@@ -103,11 +103,11 @@ WSGI_APPLICATION = 'extension.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DEFAULT_DB_NAME'],
-        'HOST': os.environ['DEFAULT_DB_HOST'],
-        'PORT': '',
-        'USER': os.environ['DEFAULT_DB_USER'],
-        'PASSWORD': os.environ['DEFAULT_DB_PASSWORD']
+        'NAME': os.environ.get('DB_ENV_DB', 'postgres'),
+        'USER': os.environ.get('DB_ENV_POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_ENV_POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DB_PORT_5432_TCP_ADDR', 'db'),
+        'PORT': os.environ.get('DB_PORT_5432_TCP_PORT', ''),
     }
 }
 
@@ -233,10 +233,10 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_WORKER_CONCURRENCY = 4
+CELERY_WORKER_CONCURRENCY = 2
 CELERY_RESULT_EXPIRES = 1
 CELERY_TASK_IGNORE_RESULT = True
-CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = False
+CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
 CELERY_ACCEPT_CONTENT = ['json']
 
 CELERY_TASK_DEFAULT_QUEUE = 'main'

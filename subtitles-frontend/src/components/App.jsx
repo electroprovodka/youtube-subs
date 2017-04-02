@@ -2,16 +2,9 @@ import React from 'react';
 import { Router, Route, browserHistory } from 'react-router';
 
 import { AboutPage, ContactsPage } from './StaticPages.jsx';
+import NotFound from './404.jsx';
 import SearchPage from './SearchPage.jsx';
 
-
-const NotFound = () => {
-	return (
-		<div>
-			<h3>404 Not found</h3>
-		</div>
-	)
-}
 
 const App = () => {
 	return (

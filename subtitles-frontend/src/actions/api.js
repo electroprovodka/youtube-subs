@@ -1,13 +1,13 @@
 import cookie from 'react-cookie';
 
-import {API_HOST, AUTH_COOKIE_NAME} from '../constants'
+import {AUTH_COOKIE_NAME} from '../constants';
 
 // TODO: enchance
 
 export const getAuthCookie = () => cookie.load(AUTH_COOKIE_NAME);
 // TODO: check 'path'
-export const setAuthCookie = (value) => {cookie.save(AUTH_COOKIE_NAME, value, {path: '/'});}
-export const removeAuthCookie = () => {cookie.remove(AUTH_COOKIE_NAME, {path: '/'})}
+export const setAuthCookie = (value) => {cookie.save(AUTH_COOKIE_NAME, value, {path: '/'});};
+export const removeAuthCookie = () => {cookie.remove(AUTH_COOKIE_NAME, {path: '/'});};
 
 const checkStatus = (response) => {
 	if (response.status >= 200 && response.status < 300) {
@@ -22,20 +22,29 @@ const checkStatus = (response) => {
 	throw error;
 };
 
-const callApi = ({method, url, body}) => {
+const callApi = ({method, url, body, params}) => {
 	const headers = new Headers({
 		'Content-Type': 'application/json',
 		Accept: 'application/json',
 		// 'Access-Control-Allow-Origin': '*'
 	});
+
+
+	const esc = encodeURIComponent;
+	const query = Object.keys(params)
+    .map(k => `${esc(k)}=${esc(params[k])}`)
+    .join('&');
+
+	const api_url = query ? `${url}?${query}`: url;
+	console.log(api_url);
 	// TODO: check other options: mode=cors and etc.
 	// TODO: fix include and cors when move to the same origin via nginx
-	return fetch(API_HOST+url, {method, body: JSON.stringify(body), headers, credentials:'include', mode:'cors'})
+	return fetch(api_url, {method, body: JSON.stringify(body), headers, credentials:'include'})
     .then(checkStatus)
     .then(response => response.json())
     .then(response => response.data);
 };
 
-export const get = (url) => callApi({method: 'GET', url});
+export const get = (url, params={}) => callApi({method: 'GET', url, params});
 
-export const post = (url, body) => callApi({method: 'POST', url, body});
+export const post = (url, body, params={}) => callApi({method: 'POST', url, body, params});
