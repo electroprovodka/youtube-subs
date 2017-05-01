@@ -3,7 +3,6 @@ import cookie from 'react-cookie';
 import {AUTH_COOKIE_NAME} from '../constants';
 
 // TODO: enchance
-
 export const getAuthCookie = () => cookie.load(AUTH_COOKIE_NAME);
 // TODO: check 'path'
 export const setAuthCookie = (value) => {cookie.save(AUTH_COOKIE_NAME, value, {path: '/'});};
@@ -38,7 +37,6 @@ const callApi = ({method, url, body, params}) => {
 	const api_url = query ? `${url}?${query}`: url;
 	console.log(api_url);
 	// TODO: check other options: mode=cors and etc.
-	// TODO: fix include and cors when move to the same origin via nginx
 	return fetch(api_url, {method, body: JSON.stringify(body), headers, credentials:'include'})
     .then(checkStatus)
     .then(response => response.json())

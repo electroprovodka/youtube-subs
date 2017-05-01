@@ -4,9 +4,6 @@ FROM node:6.9
 RUN mkdir -p /app/frontend
 WORKDIR /app/frontend
 
-# to make npm test run only once non-interactively
-# ENV CI=true
-
 # Bundle app source
 COPY . /app/frontend
 RUN npm install && \

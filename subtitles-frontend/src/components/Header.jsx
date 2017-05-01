@@ -2,9 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { Nav, NavItem, Col, Row } from 'react-bootstrap';
 
-import { moveTo, clearVideosState } from '../actions/actions'
-
-import Auth from './Auth.jsx'
+import { moveTo, clearVideosState } from '../actions/actions';
 
 
 const CustomNavItemLayout = ({children, to, moveTo, handleClick, ...props}) => {
@@ -15,23 +13,20 @@ const CustomNavItemLayout = ({children, to, moveTo, handleClick, ...props}) => {
 	);
 };
 
-const CustomNavItem = connect((state, ownProps)=>({...ownProps}), {moveTo})(CustomNavItemLayout)
+const CustomNavItem = connect((state, ownProps)=>({...ownProps}), {moveTo})(CustomNavItemLayout);
 
 const Header = ({clearVideosState}) => {
 	return (
 		<Row>
-			<Col xs={11}>
+			<Col xs={12}>
 		    <Nav bsStyle="tabs">
 		      <CustomNavItem to="/" handleClick={clearVideosState}>Search</CustomNavItem>
 					<CustomNavItem to="/about">About</CustomNavItem>
 					<CustomNavItem to="/contacts">Contacts</CustomNavItem>
 		    </Nav>
 			</Col>
-			<Col xs={1}>
-				<Auth/>
-			</Col>
 		</Row>
 	);
 };
 
-export default connect(null, {clearVideosState})(Header)
+export default connect(null, {clearVideosState})(Header);

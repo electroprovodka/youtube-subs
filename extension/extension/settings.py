@@ -45,34 +45,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'server.apps.ServerConfig',
-    'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2',
-    # 'corsheaders',
     'django_celery_beat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
-
-# TODO: change when move to the same origin (nginx)
-# CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = [
-#     'localhost:3000',
-#     '127.0.0.1:3000',
-# ]
-#
-# CORS_ALLOW_CREDENTIALS = True
-# CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
 
 ROOT_URLCONF = 'extension.urls'
 
@@ -87,8 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -153,26 +135,19 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
-        'server.auth_helper.JWTAuth',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        # TODO: think if we need this
         'rest_framework.permissions.AllowAny'
-    ]
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ],
 }
-
-
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
-    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
-    'django.contrib.auth.backends.ModelBackend'
-)
 
 
 INDEX_DIR = os.path.join(BASE_DIR, 'index')
@@ -191,23 +166,21 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
-# # TODO: do we need to get refresh token again
-# SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_ARGUMENTS = {
-#     'access_type': 'offline'
-# }
-
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 JWT_COOKIE_KEY = 'youtubesubs_auth_JWT'
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=20),
-    # 'JWT_VERIFY_EXPIRATION': True,
-    # JWT_LEEWAY: 100 s
     'JWT_AUTH_COOKIE': JWT_COOKIE_KEY
 }
 
 YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v={video_id}'
+DEFAULT_PREVIEW_START = 10
+DEFAULT_PREVIEW_DURATION = 5
+DEFAULT_DURATION_REQUIREMENT = 10
+
+INDEX_SEARCH_FIELDS = ['text', 'title', 'description', 'id']
 
 # TODO: find best options
 PREVIEW_PROCESSING_OPTIONS = {
@@ -230,6 +203,7 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 # CELERY_RESULT_BACKEND = 'amqp'
 
 # CELERY_TASK_IGNORE_RESULTS = True
+
 
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -273,12 +247,13 @@ CELERY_BEAT_SCHEDULE = {
 # ----- Log Settings ----- #
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 
+
 LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format': '[CRON] [%(asctime)s %(levelname)s/%(processName)s] %(message)s',
+            'format': '[%(asctime)s %(levelname)s/%(processName)s] %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
         'task': {
@@ -306,7 +281,7 @@ LOG_CONFIG = {
         'celery.task': {
             'level': 'INFO',
             'handlers': ['task'],
-            'propagate': False,
+            'propagate': True,
         },
         'django.db.backends': {
             'handlers': ['console'],
@@ -315,7 +290,7 @@ LOG_CONFIG = {
         '': {
             'level': 'INFO',
             'handlers': ['standard'],
-            'propagate': False,
+            'propagate': True,
         }
     },
 }

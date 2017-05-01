@@ -41,7 +41,7 @@ services:
   celery:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileCelery
     command: ./run_celery.sh
     ports:
       - "5556:5555"
@@ -52,6 +52,7 @@ services:
       - rabbit
     depends_on:
       - rabbit
+      - db
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
   frontend:

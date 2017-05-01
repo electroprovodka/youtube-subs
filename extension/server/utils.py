@@ -1,14 +1,17 @@
 from __future__ import unicode_literals
-
 from functools import wraps
 
-from requests.exceptions import HTTPError
-
 from .responses import OkResponse, BadRequestResponse, NotFoundResponse
-from .errors import AuthenticationFailedError
 
 
 def handle_response(error_mapping={}, response_class=OkResponse):
+    """
+    Decorator that provide a cleaner way to handle errors.
+    Wrapped view should return response dict
+    :param error_mapping: dict with keys - ErrorClasses - and values - response codes
+    :param response_class: class of successful response
+    :return:
+    """
     def wrapper(f):
         @wraps(f)
         def inner(*args, **kwargs):
@@ -33,13 +36,3 @@ def handle_response(error_mapping={}, response_class=OkResponse):
             return response_class({'data': result})
         return inner
     return wrapper
-
-
-def get_user_from_backend(backend, access_token):
-    try:
-        return backend.do_auth(access_token)
-    except HTTPError as e:
-        raise AuthenticationFailedError(message=str(e))
-
-
-

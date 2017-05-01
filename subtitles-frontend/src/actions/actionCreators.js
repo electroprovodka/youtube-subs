@@ -26,11 +26,12 @@ export const searchRequested = () => {
 };
 
 export const searchReceived = (data) => {
+	console.log(data);
 	return {
 		type: SEARCH_RECEIVED,
 		videos: data.videos,
-		totalLength: data.total_length,
-		totalPages: data.total_pages
+		totalLength: data.totalLength,
+		totalPages: data.totalPages
 	};
 };
 
@@ -45,7 +46,7 @@ export const pageChangeReceived = (data) => {
 	return {
 		type: PAGE_CHANGE_RECEIVED,
 		videos: data.videos,
-		totalLength: data.total_length
+		totalLength: data.totalLength
 	};
 };
 
@@ -58,4 +59,4 @@ export const logoutRequested = () => ({type: LOGOUT_REQUESTED});
 export const logoutReceived = () => ({type: LOGOUT_RECEIVED});
 
 
-export const clearVideos = () => ({type: CLEAR_VIDEOS})
+export const clearVideos = () => ({type: CLEAR_VIDEOS});

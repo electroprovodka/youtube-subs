@@ -57,15 +57,6 @@ class VideoPreview extends React.Component {
 						poster={thumbnail.url}>
 						<source src={preview.url} type="video/webm"></source>
 					</video>
-					// <Player loop autoPlay playsInline
-					// 	poster={thumbnail.url}
-					// 	height={480}
-					// 	>
-					// 		<source src={preview.url} type="video/webm"></source>
-					// 		<LoadingSpinner />
-					// 		<BigPlayButton disabled />
-					// 		<ControlBar disabled/>
-					// 	</Player>
 					: <Image width={256} height={256}
 						src={thumbnail.url} thumbnail responsive />
 				}
