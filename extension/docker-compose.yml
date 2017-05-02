@@ -76,9 +76,6 @@ services:
     links:
       - backend
 
-  # This container sits in front of the others,
-  # I need it because both frontend and backend containers
-  # can't connect to the port 80 at the same time
   nginx_proxy:
     build: ./configs/nginx
     container_name: nginx_proxy
