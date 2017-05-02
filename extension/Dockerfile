@@ -1,6 +1,8 @@
 # use base python image with python 2.7
 FROM python:2.7
 
+RUN pip install gunicorn
+
 # add requirements.txt to the image
 ADD requirements.txt /app/requirements.txt
 

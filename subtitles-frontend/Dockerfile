@@ -7,12 +7,13 @@ WORKDIR /app/frontend
 # to make npm test run only once non-interactively
 # ENV CI=true
 
+COPY package.json /app/frontend
+
 # Bundle app source
-COPY . /app/frontend
 RUN npm install && \
     npm install -g pushstate-server
 
-# Build and optimize react app
+COPY . /app/frontend
 # RUN npm run build
 
 EXPOSE 3000

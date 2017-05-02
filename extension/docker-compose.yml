@@ -1,11 +1,20 @@
 version: '2'
 
 services:
+  data:
+    restart: always
+    image: alpine
+    volumes:
+      - /var/lib/postgresql
+    command: "true"
+
   # PostgreSQL database
   db:
     image: postgres:9.4
     hostname: db
     env_file: .env
+    volumes_from:
+      - data
     ports:
       - "5432:5432"
 
@@ -16,6 +25,23 @@ services:
     ports:
       - "5673:5672"  # we forward this port because it's useful for debugging
       - "15673:15672"  # here, we can access rabbitmq management plugin
+
+  # Celery worker
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./run_celery.sh
+    env_file: .env
+    ports:
+      - "5556:5555"
+    volumes:
+      - .:/app
+    links:
+      - db
+      - rabbit
+    depends_on:
+      - rabbit
 
   # Django web server
   backend:
@@ -36,22 +62,8 @@ services:
       - rabbit
     depends_on:
       - db
-
-  # Celery worker
-  celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ./run_celery.sh
-    ports:
-      - "5556:5555"
-    volumes:
-      - .:/app
-    links:
-      - db
       - rabbit
-    depends_on:
-      - rabbit
+      - celery
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
   frontend:

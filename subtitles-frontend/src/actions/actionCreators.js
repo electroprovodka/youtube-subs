@@ -9,7 +9,8 @@ import {
   LOGIN_FAILED,
   LOGOUT_REQUESTED,
   LOGOUT_RECEIVED,
-  CLEAR_VIDEOS
+  CLEAR_VIDEOS,
+  ERROR_RECEIVED
 } from './constants';
 
 export const updateQuery = (query) => {
@@ -58,4 +59,6 @@ export const logoutRequested = () => ({type: LOGOUT_REQUESTED});
 export const logoutReceived = () => ({type: LOGOUT_RECEIVED});
 
 
-export const clearVideos = () => ({type: CLEAR_VIDEOS})
+export const clearVideos = () => ({type: CLEAR_VIDEOS});
+
+export const errorReceived = (message, code) => ({type: ERROR_RECEIVED, message, code});

@@ -12,7 +12,8 @@ import {
   LOGIN_FAILED,
   LOGOUT_REQUESTED,
   LOGOUT_RECEIVED,
-  CLEAR_VIDEOS
+  CLEAR_VIDEOS,
+  ERROR_RECEIVED
 } from '../actions/constants';
 import { defaultDataState, defaultUserState} from '../constants'
 
@@ -60,7 +61,16 @@ const defaultReducer = (state=defaultDataState, action) => {
 	return state;
 };
 
+const errorReducer = (state={}, action) => {
+  switch(action.type) {
+  case ERROR_RECEIVED:
+    return {...state, error: true, message: action.message, code: action.code};
+  }
+  return state;
+}
+
 export default combineReducers({
 	user: loginReducer,
-	data: defaultReducer
+	data: defaultReducer,
+  error: errorReducer
 });

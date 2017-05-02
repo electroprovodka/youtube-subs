@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-
-
-def read_env():
-    # TODO: use dot_env
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    env_file = os.path.join(base_dir, '.env')
-    if os.path.exists(env_file):
-        with open(env_file, 'rb') as env:
-            for line in env:
-                name, value = line.split('=', 1)
-                if name and value:
-                    os.environ.setdefault(name, value.strip())
+from extension.read_env import read_env
 
 
 if __name__ == "__main__":

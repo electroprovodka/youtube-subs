@@ -6,6 +6,7 @@ from googleapiclient.errors import HttpError
 
 from .models import Video
 
+
 def _get_youtube_service():
     return build(settings.YOUTUBE_API_SERVICE_NAME, settings.YOUTUBE_API_VERSION,
                  developerKey=settings.GOOGLE_API_DEVELOPER_KEY)

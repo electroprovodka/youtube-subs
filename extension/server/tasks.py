@@ -28,6 +28,7 @@ def create_previews():
         except Exception as e:
             logger.error('Error while creating preview: {}'.format(e))
             logger.error(traceback.format_exc())
+            continue
 
         video.preview_url = url
         video.preview_created = True

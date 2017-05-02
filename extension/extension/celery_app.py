@@ -1,26 +1,17 @@
 from __future__ import absolute_import
 
 import logging
-import os
 
 from django.conf import settings
 
 from celery import Celery
 from celery.signals import task_failure
 
+from .read_env import read_env
+
 logger = logging.getLogger('celery')
 
 
-def read_env():
-    # TODO: use dot_env
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    env_file = os.path.join(base_dir, '.env')
-    if os.path.exists(env_file):
-        with open(env_file, 'rb') as env:
-            for line in env:
-                name, value = line.split('=', 1)
-                if name and value:
-                    os.environ.setdefault(name, value.strip())
 read_env()
 
 app = Celery('youtubesubs')

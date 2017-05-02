@@ -7,8 +7,6 @@ import time
 
 from django.conf import settings
 
-from .models import Video
-
 
 def _get_video_info(video_id, fields=['url', 'duration']):
     # TODO: handle errors
@@ -34,7 +32,7 @@ def _get_video_preview(url, start, preview_duration=5):
                 #'-qmin 10 -qmax 42 ' # quantization levels (0-63) - lower better
                 #'-maxrate 500k '
                 #'-bufsize 1M ' # twice as max rate to have buffer for 2 seconds
-                '-vf scale=-1:480 ' # new video size (-1 means save proportions)
+                '-vf scale=-1:360 ' # new video size (-1 means save proportions)
                 #'-codec:a libvorbis -b:a 128k ' # audio codec
                 '-f webm '  # used to specify encoding from pipe
                 .format(duration=preview_duration)
@@ -55,7 +53,6 @@ def _fetch_preview(video_id):
 
 
 def _save_preview(filename, preview):
-    # TODO: require secrets in env
     s3 = boto3.resource(
         's3',
         aws_access_key_id=settings.AWS_ACCESS_KEY,
