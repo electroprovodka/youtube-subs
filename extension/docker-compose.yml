@@ -1,14 +1,6 @@
 version: '2'
 
 services:
-  # PostgreSQL database
-  db:
-    image: postgres:9.4
-    hostname: db
-    env_file: .env
-    ports:
-      - "5432:5432"
-
   # RabbitMQ
   rabbit:
     hostname: rabbit
@@ -16,6 +8,22 @@ services:
     ports:
       - "5673:5672"  # we forward this port because it's useful for debugging
       - "15673:15672"  # here, we can access rabbitmq management plugin
+
+  # Celery worker
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./run_celery.sh
+    env_file: .env
+    ports:
+      - "5556:5555"
+    volumes:
+      - .:/app
+    links:
+      - rabbit
+    depends_on:
+      - rabbit
 
   # Django web server
   backend:
@@ -32,27 +40,9 @@ services:
       - "8000:8000"
     # set up links so that web knows about db, rabbit and redis
     links:
-      - db
-      - rabbit
-    depends_on:
-      - db
-
-  # Celery worker
-  celery:
-    build:
-      context: .
-      dockerfile: DockerfileCelery
-    command: ./run_celery.sh
-    ports:
-      - "5556:5555"
-    volumes:
-      - .:/app
-    links:
-      - db
       - rabbit
     depends_on:
       - rabbit
-      - db
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
   frontend:
