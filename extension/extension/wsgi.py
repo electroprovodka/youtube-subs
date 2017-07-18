@@ -15,5 +15,6 @@ from read_env import read_env
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "extension.settings")
 
-read_env()
+path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+read_env(path)
 application = get_wsgi_application()

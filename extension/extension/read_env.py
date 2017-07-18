@@ -3,10 +3,10 @@ import os
 from django.conf import settings
 
 
-def read_env():
-    env_file = os.path.join(settings.BASE_DIR, '.env')
-    if os.path.exists(env_file):
-        with open(env_file, 'rb') as env:
+def read_env(path):
+    #env_file = os.path.join(settings.BASE_DIR, '.env')
+    if os.path.exists(path):
+        with open(path, 'rb') as env:
             for line in env:
                 line = line.strip()
                 if not line or line.startswith('#'):

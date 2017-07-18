@@ -23,7 +23,7 @@ services:
     hostname: rabbit
     image: rabbitmq:3.6.0
     ports:
-      - "5673:5672"  # we forward this port because it's useful for debugging
+      - "5673:5672"
       - "15673:15672"  # here, we can access rabbitmq management plugin
 
   # Celery worker
@@ -50,8 +50,6 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     hostname: backend
-    env_file: .env
-    command: ./run_server.sh
     volumes:
       - .:/app  # mount current directory inside container
     ports:

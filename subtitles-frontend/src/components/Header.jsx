@@ -20,15 +20,12 @@ const CustomNavItem = connect((state, ownProps)=>({...ownProps}), {moveTo})(Cust
 const Header = ({clearVideosState}) => {
 	return (
 		<Row>
-			<Col xs={11}>
+			<Col xs={12}>
 		    <Nav bsStyle="tabs">
 		      <CustomNavItem to="/" handleClick={clearVideosState}>Search</CustomNavItem>
 					<CustomNavItem to="/about">About</CustomNavItem>
 					<CustomNavItem to="/contacts">Contacts</CustomNavItem>
 		    </Nav>
-			</Col>
-			<Col xs={1}>
-				<Auth/>
 			</Col>
 		</Row>
 	);

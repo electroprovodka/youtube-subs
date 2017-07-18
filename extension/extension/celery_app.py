@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import logging
+import os
 
 from django.conf import settings
 
@@ -11,8 +12,8 @@ from .read_env import read_env
 
 logger = logging.getLogger('celery')
 
-
-read_env()
+path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+read_env(path)
 
 app = Celery('youtubesubs')
 

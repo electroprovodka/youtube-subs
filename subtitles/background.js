@@ -36,14 +36,14 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
         function() {
           var data = JSON.parse(this.responseText);
           if(data.data['exist'] === false){
-            chrome.tabs.sendMessage(tabId, {"message": "video_id_to_fetch"});
+            chrome.tabs.sendMessage(tabId, {"message": "videoIdToFetch"});
           }
           else if(data.data['exist'] === true) {
             // TODO: change icon color
             console.log('exists');
           }
           else{
-            console.log(this.responseText);
+            console.log('Result: '+this.responseText);
           }
         },
         function() {
@@ -57,7 +57,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if(request.message === "subs_fetched"){
+    if(request.message === "subsFetched"){
       var videoId = getVideoId(sender.tab.url);
       var subs = request.subs, title = request.title,
         descr = request.description;

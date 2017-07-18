@@ -21,5 +21,6 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
-    read_env()
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+    read_env(path)
     execute_from_command_line(sys.argv)

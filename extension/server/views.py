@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import logging
 
 from django.conf import settings
 
@@ -43,6 +44,7 @@ def check_id(request):
     if video_id:
         # TODO: add video somewhere to avoid race condition
         exist = Video.objects.filter(youtube_id=video_id).exists()
+    logging.info(video_id + ': ' + str(exist))
     return {'exist': exist}
 
 

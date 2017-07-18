@@ -53,7 +53,7 @@ class VideoPreview extends React.Component {
 				{
 					// TODO: move to separate components
 					this.state.isHovering && preview.exist
-					? <video loop autoPlay width={256} height={256}
+					? <video loop autoPlay width="256"
 						poster={thumbnail.url}>
 						<source src={preview.url} type="video/webm"></source>
 					</video>
@@ -66,8 +66,8 @@ class VideoPreview extends React.Component {
 					// 		<BigPlayButton disabled />
 					// 		<ControlBar disabled/>
 					// 	</Player>
-					: <Image width={256} height={256}
-						src={thumbnail.url} thumbnail responsive />
+					: <Image width="256"
+						src={thumbnail.url} thumbnail />
 				}
 			</div>
 		);
@@ -90,10 +90,10 @@ const Video = (props) => {
     <div className="video">
       <Grid>
         <Row>
-          <Col md={2}>
+          <Col md={3}>
             <VideoPreview thumbnail={thumbnail} preview={preview}/>
           </Col>
-          <Col md={10}>
+          <Col md={9}>
             <Row className="title">
             	<Button bsStyle="link" target="_blank" href={videoUrl}>
 								<Media.Heading>{title}</Media.Heading>
@@ -106,7 +106,7 @@ const Video = (props) => {
 							<Col md={3}>
 								Author: {channelInfo.name}
 							</Col>
-							<Col md={4}>
+							<Col md={5}>
 								Published: {publishDate}
 							</Col>
 						</Row>

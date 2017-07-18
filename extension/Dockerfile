@@ -12,5 +12,8 @@ WORKDIR /app/
 # install python dependencies
 RUN pip install -r requirements.txt
 
+COPY . /app/
 # create unprivileged user
 RUN adduser --disabled-password --gecos '' myuser
+RUN chmod +x /app/run_server.sh
+CMD ["/app/run_server.sh"]
