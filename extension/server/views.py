@@ -33,7 +33,7 @@ def search(request):
 @api_view(['GET'])
 def create_previews(request):
     from .tasks import create_previews
-    create_previews.apply()
+    create_previews.apply_async()
 
 
 class VideoViews(APIView):

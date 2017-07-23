@@ -16,9 +16,14 @@ services:
   rabbit:
     hostname: rabbit
     container_name: extension_rabbit
-    image: rabbitmq:3.6.0
+    image: rabbitmq:3.6.0-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+    expose:
+      - "5672"
     ports:
-      - "5673:5672"  # we forward this port because it's useful for debugging
+#      - "5673:5672"  # we forward this port because it's useful for debugging
       - "15673:15672"  # here, we can access rabbitmq management plugin
 
   # Celery worker
@@ -36,8 +41,6 @@ services:
     links:
       - db
       - rabbit
-    depends_on:
-      - rabbit
 
   # Django web server
   backend:
@@ -52,7 +55,7 @@ services:
       - .:/app  # mount current directory inside container
     ports:
       - "8000"
-    # set up links so that web knows about db, rabbit and redis
+    # set up links so that web knows about db, rabbit
     links:
       - db
       - rabbit
@@ -83,3 +86,6 @@ services:
 
 volumes:
   pgdata:
+
+networks:
+  default:

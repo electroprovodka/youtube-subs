@@ -26,6 +26,6 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
-    import pydevd
-    pydevd.settrace('172.19.0.1', port=9999, stdoutToServer=True, stderrToServer=True)
+    # import pydevd
+    # pydevd.settrace('172.19.0.1', port=9999, stdoutToServer=True, stderrToServer=True)
     execute_from_command_line(sys.argv)

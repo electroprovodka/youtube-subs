@@ -227,7 +227,7 @@ OTHER_QUEUES = (
 )
 
 
-CELERY_TASK_QUEUES = [Queue(queue, Exchange(queue), routing_key=queue+'.#') for queue in OTHER_QUEUES]
+CELERY_TASK_QUEUES = [Queue(queue, Exchange(queue), routing_key=queue) for queue in OTHER_QUEUES]
 
 # ----- Job schedules ----- #
 CELERY_IMPORTS = (

@@ -1,9 +1,11 @@
-import youtube_dl
+import os
+import uuid
+
+import boto3
+from botocore.client import Config
 import ffmpy
 import subprocess
-import boto3
-import os
-import time
+import youtube_dl
 
 from django.conf import settings
 
@@ -92,6 +94,7 @@ def _save_preview(filename, preview):
         's3',
         aws_access_key_id=settings.AWS_ACCESS_KEY,
         aws_secret_access_key=settings.AWS_SECRET_KEY,
+        config=Config(signature_version='s3v4')
     )
     filepath = os.path.join(settings.S3_PREVIEWS_FOLDER, filename)
     s3.Object(settings.S3_BUCKET_NAME, filepath).put(Body=preview, ACL='public-read')
@@ -103,7 +106,7 @@ def _generate_filename():
     Generate unique enough name for snippet
     :return: string: filename
     """
-    return str(int(time.time())) + '.webm'
+    return uuid.uuid4().hex + '.webm'
 
 
 def create_preview(video_id):
