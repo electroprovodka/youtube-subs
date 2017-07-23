@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # wait for PSQL server to start
-sleep 20
+sleep 30
 
 export WORKDIR="$PWD"
 export PY_PATH="$(dirname "$(which python)")"

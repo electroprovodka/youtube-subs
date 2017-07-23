@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 import os
 import sys
-from extension.read_env import read_env
+from dotenv import load_dotenv
 
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "extension.settings")
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    env_file = os.path.join(base_dir, '.env')
+    load_dotenv(env_file)
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError:
@@ -21,5 +26,6 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
-    read_env()
+    import pydevd
+    pydevd.settrace('172.19.0.1', port=9999, stdoutToServer=True, stderrToServer=True)
     execute_from_command_line(sys.argv)

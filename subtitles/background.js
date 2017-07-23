@@ -1,5 +1,5 @@
 function buildPath(path) {
-  return 'http://127.0.0.1:8000/api/'+path
+  return 'http://127.0.0.1/api/'+path
 }
 
 function getVideoId(tabUrl) {
@@ -32,11 +32,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     if (videoId) {
       var x = createRequest(
         'GET',
-        buildPath('check_id/?id='+videoId),
+        buildPath('video/?id='+videoId),
         function() {
           var data = JSON.parse(this.responseText);
           if(data.data['exist'] === false){
-            chrome.tabs.sendMessage(tabId, {"message": "video_id_to_fetch"});
+            chrome.tabs.sendMessage(tabId, {"message": "videoIdToFetch"});
           }
           else if(data.data['exist'] === true) {
             // TODO: change icon color
@@ -57,13 +57,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if(request.message === "subs_fetched"){
+    if(request.message === "subsFetched"){
       var videoId = getVideoId(sender.tab.url);
       var subs = request.subs, title = request.title,
         descr = request.description;
       var x = createRequest(
         'POST',
-        buildPath('post/'),
+        buildPath('video/'),
         function() {
           console.log('done');
         },
@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(
       x.setRequestHeader("Content-Type", "application/json");
       x.send(JSON.stringify({
         "text": subs,
-        "video_id": videoId,
+        "videoId": videoId,
         "title": title,
         "description": descr})
       );

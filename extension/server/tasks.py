@@ -18,10 +18,11 @@ def test():
 
 @shared_task(ignore_results=True, queue='periodic', routing_key='periodic.server.tasks.create_previews')
 def create_previews():
-    # TODO: handle errors
+    """
+    Task that is triggered periodically. Get all videos that do not have previews and create previews for them
+    """
     # TODO: prevent simultaneous execution of this task
     videos = Video.objects.filter(preview_created=False)
-    # TODO: is n+1 ?
     for video in videos:
         try:
             url = create_preview(video.youtube_id)

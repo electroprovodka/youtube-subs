@@ -1,23 +1,22 @@
 from __future__ import absolute_import
 
 import logging
+import os
 
 from django.conf import settings
+from dotenv import load_dotenv
 
 from celery import Celery
 from celery.signals import task_failure
 
-from .read_env import read_env
-
 logger = logging.getLogger('celery')
 
-
-read_env()
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_file = os.path.join(base_dir, '.env')
+load_dotenv(env_file)
 
 app = Celery('youtubesubs')
 
-# Using a string here means the worker will not have to
-# pickle the object when using Windows.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 

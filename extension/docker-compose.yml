@@ -1,26 +1,21 @@
 version: '2'
 
 services:
-  data:
-    restart: always
-    image: alpine
-    volumes:
-      - /var/lib/postgresql
-    command: "true"
-
   # PostgreSQL database
   db:
     image: postgres:9.4
     hostname: db
+    container_name: extension_db
     env_file: .env
-    volumes_from:
-      - data
+    volumes:
+      - "pgdata:/var/lib/postgresql/data/"
     ports:
       - "5432:5432"
 
   # RabbitMQ
   rabbit:
     hostname: rabbit
+    container_name: extension_rabbit
     image: rabbitmq:3.6.0
     ports:
       - "5673:5672"  # we forward this port because it's useful for debugging
@@ -30,8 +25,9 @@ services:
   celery:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileCelery
     command: ./run_celery.sh
+    container_name: extension_celery
     env_file: .env
     ports:
       - "5556:5555"
@@ -48,29 +44,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: extension_backend
     hostname: backend
     env_file: .env
     command: ./run_server.sh
     volumes:
       - .:/app  # mount current directory inside container
     ports:
-      - "8000:8000"
+      - "8000"
     # set up links so that web knows about db, rabbit and redis
     links:
       - db
       - rabbit
     depends_on:
       - db
-      - rabbit
-      - celery
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
   frontend:
     build: ../subtitles-frontend
     volumes:
       - ../subtitles-frontend:/app/frontend
-    container_name: frontend
+    container_name: extension_frontend
     hostname: frontend
 #    working_dir: /app/frontend
     links:
@@ -78,7 +72,7 @@ services:
 
   nginx_proxy:
     build: ./configs/nginx
-    container_name: nginx_proxy
+    container_name: extension_nginx
     # See the file nginx_proxy.conf
     # It uses these links to connect you to the two containers
     links:
@@ -86,3 +80,6 @@ services:
       - frontend
     ports:
       - '80:80'
+
+volumes:
+  pgdata:

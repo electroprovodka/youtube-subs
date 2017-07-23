@@ -13,11 +13,6 @@ class NotFoundError(ApiError):
     message = 'Resource not found'
 
 
-class AuthenticationFailedError(ApiError):
-    error_type = 'AuthenticationFailed'
-    message = 'Authentication failed'
-
-
 class InvalidRequestError(ApiError):
     error_type = 'InvalidRequest'
     message = 'Request data is invalid'

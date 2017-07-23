@@ -2,7 +2,7 @@ from whoosh import fields
 from whoosh.analysis import analyzers
 
 
-search_fields = frozenset(['text', 'title', 'description', 'id'])
+__all__ = ['YoutubeSubtitlesSchema']
 
 
 class YoutubeSubtitlesSchema(fields.SchemaClass):
