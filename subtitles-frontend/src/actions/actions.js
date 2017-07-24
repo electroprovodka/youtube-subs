@@ -33,10 +33,10 @@ const submitSearch = () => (dispatch, getState) => {
     .then(data => {
     	dispatch(searchReceived(data));
     	return data;
-    })
+})
     .catch(err => {
-      dispatch(errorReceived(err.status, err.statusCode))
-    });
+	dispatch(errorReceived(err.status, err.statusCode));
+});
 };
 
 const requestPage = (nextPage) => (dispatch, getState) => {
@@ -56,10 +56,10 @@ const requestPage = (nextPage) => (dispatch, getState) => {
     .then(data=> {
     	dispatch(pageChangeReceived(data));
     	return data;
-    })
+})
     .catch(err => {
-      dispatch(errorReceived(err.status, err.statusCode))
-    });;
+	dispatch(errorReceived(err.status, err.statusCode));
+});
 };
 
 const loginSuccess = (response) => (dispatch) => {
