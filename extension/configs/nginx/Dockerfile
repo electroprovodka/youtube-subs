@@ -1,16 +1,4 @@
-FROM ubuntu:latest
-
-# Install Nginx.
-RUN apt-get update && apt-get install -y nginx
-
-# Turn off daemon mode
-RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
+FROM nginx:latest
 
 # Copy nginx config
-COPY nginx_proxy.conf /etc/nginx/sites-enabled/default
-
-# Define default command.
-CMD ["nginx"]
-
-# Expose ports.
-EXPOSE 80
+COPY nginx_proxy.conf /etc/nginx/conf.d/youtubesubs

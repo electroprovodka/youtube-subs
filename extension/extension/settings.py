@@ -235,11 +235,6 @@ CELERY_IMPORTS = (
 )
 
 CELERY_BEAT_SCHEDULE = {
-    'test_task': {
-        'task': 'server.tasks.test',
-        'schedule': 60,
-        'options': {'queue': 'periodic'}
-    },
     'create_previews': {
         'task': 'server.tasks.create_previews',
         'schedule': 300, #crontab(minute=30, hour=4)

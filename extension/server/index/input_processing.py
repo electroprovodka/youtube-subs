@@ -37,11 +37,11 @@ def process_data(data):
     """
     Process payload from extension
     :param data:
-    :return:
+    :return: dict of processed data
     """
     xml, title, description = extract_data(data)
-
-    text = process_xml(xml)
-    title = process_text(title)
-    description = process_text(description)
-    return dict(zip(data_keys, [text, title, description]))
+    return {
+        'text': process_xml(xml),
+        'title': process_text(title),
+        'description': process_text(description)
+    }

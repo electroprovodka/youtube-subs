@@ -44,4 +44,4 @@ def search_index(query_string, page):
     with index.searcher() as searcher:
         query = MultifieldParser(settings.INDEX_SEARCH_FIELDS, index.schema, group=OrGroup).parse(query_string)
         results = searcher.search_page(query, pagenum=page)
-        return results.total, results.pagecount, [hit['id'] for hit in results]
+        return [hit['id'] for hit in results], results.total, results.pagecount

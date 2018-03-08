@@ -3,7 +3,7 @@ version: '2'
 services:
   # PostgreSQL database
   db:
-    image: postgres:9.4
+    image: postgres:9.6
     hostname: db
     container_name: extension_db
     env_file: .env
@@ -16,10 +16,8 @@ services:
   rabbit:
     hostname: rabbit
     container_name: extension_rabbit
-    image: rabbitmq:3.6.0-management
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=password
+    image: rabbitmq:3.7.3-management
+    env_file: .env
     expose:
       - "5672"
     ports:
@@ -34,12 +32,37 @@ services:
     command: ./run_celery.sh
     container_name: extension_celery
     env_file: .env
-    ports:
-      - "5556:5555"
     volumes:
       - .:/app
     links:
       - db
+      - rabbit
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./run_celery_beat.sh
+    container_name: extension_celery_beat
+    env_file: .env
+    volumes:
+      - .:/app
+    links:
+      - db
+      - rabbit
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "flower -A extension.celery_app --conf=extension/flowerconfig.py --port=5555"
+    container_name: extension_flower
+    ports:
+      - "5556:5555"
+    env_file:
+      - .env
+    links:
+      - celery
       - rabbit
 
   # Django web server
@@ -63,15 +86,15 @@ services:
       - db
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
-  frontend:
-    build: ../subtitles-frontend
-    volumes:
-      - ../subtitles-frontend:/app/frontend
-    container_name: extension_frontend
-    hostname: frontend
-#    working_dir: /app/frontend
-    links:
-      - backend
+#  frontend:
+#    build: ../subtitles-frontend
+#    volumes:
+#      - ../subtitles-frontend:/app/frontend
+#    container_name: extension_frontend
+#    hostname: frontend
+##    working_dir: /app/frontend
+#    links:
+#      - backend
 
   nginx_proxy:
     build: ./configs/nginx
@@ -80,7 +103,7 @@ services:
     # It uses these links to connect you to the two containers
     links:
       - backend
-      - frontend
+#      - frontend
     ports:
       - '80:80'
 

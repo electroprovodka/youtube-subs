@@ -2,6 +2,8 @@ import logging
 
 from django.conf import settings
 
+from rest_framework.exceptions import APIException
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -11,13 +13,8 @@ from .models import Video
 logger = logging.getLogger()
 
 
-def _get_youtube_service():
-    """
-    Creates youtube service
-    :return: YouTube service object
-    """
-    return build(settings.YOUTUBE_API_SERVICE_NAME, settings.YOUTUBE_API_VERSION,
-                 developerKey=settings.GOOGLE_API_DEVELOPER_KEY)
+YouTubeService = build(settings.YOUTUBE_API_SERVICE_NAME, settings.YOUTUBE_API_VERSION,
+                       developerKey=settings.GOOGLE_API_DEVELOPER_KEY)
 
 
 def extract_video_data(data):
@@ -29,11 +26,12 @@ def extract_video_data(data):
     video = data['snippet']
     return {
         'id': data['id'],
-        'channel_info': {'name': video['channelTitle'], 'id': video['channelId']},
+        'channel_name': video['channelTitle'],
+        'channel_id': video['channelId'],
         'description': video['description'],
         'title': video['title'],
         'tags': video['tags'],
-        'publish_date': video['publishedAt'],
+        'published_at': video['publishedAt'],
         'thumbnail': video['thumbnails']['medium']
     }
 
@@ -44,25 +42,22 @@ def get_videos_info(ids):
     :param ids: ids of videos to fetch data
     :return: list: videos data
     """
-    youtube = _get_youtube_service()
     try:
-        videos_data = youtube.videos().list(
+        videos_data = YouTubeService.videos().list(
             id=','.join(ids),
             part='snippet'
         ).execute()
     except HttpError as e:
-        logger.warning('Error: '+str(e))
-        # TODO: return error response
-        return []
+        logger.error('Youtube fetch error: {}'.format(e), extra={'ids': ids})
+        raise APIException('Can not fetch videos data')
 
     videos = []
-    previews_info = Video.objects.filter(youtube_id__in=ids).values_list('preview_created', 'preview_url')
-    for item_data, preview_info in zip(videos_data['items'], previews_info):
-        # TODO: catch errors
+    previews_info = Video.objects.filter(youtube_id__in=ids).values_list('has_preview', 'preview_url')
+    for item_data, (has_preview, url) in zip(videos_data['items'], previews_info):
         video = extract_video_data(item_data)
-        video['preview'] = {
-            'exists': preview_info[0],
-            'url': preview_info[1]
-        }
+        video.update({
+            'preview_exists': has_preview,
+            'preview_url': url
+        })
         videos.append(video)
     return videos

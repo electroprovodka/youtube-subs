@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # wait for PSQL server to start
-sleep 30
+sleep 20
 
 # migrate db, so we have the latest db schema
 python manage.py migrate

@@ -1,10 +1,12 @@
 from django.conf.urls import url
 
-from .views import VideoViews, search, create_previews
+from rest_framework.routers import SimpleRouter
+
+from .views import VideoViewSet
 
 
-urlpatterns = [
-    url(r'^video/$', VideoViews.as_view(), name='add_video'),
-    url(r'^search/$', search, name='search'),
-    url(r'^previews/$', create_previews )
-]
+router = SimpleRouter()
+router.register('video', VideoViewSet)
+
+
+urlpatterns = router.urls

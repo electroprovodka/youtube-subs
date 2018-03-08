@@ -3,6 +3,6 @@
 # wait for PSQL server to start
 sleep 30
 
-export WORKDIR="$PWD"
-export PY_PATH="$(dirname "$(which python)")"
-supervisord -c supervisor.conf -n
+rm /tmp/celery-worker.pid
+
+celery -A extension.celery_app worker -E -c 2 -Ofair -l info -Q manual,periodic --pidfile=/tmp/celery-worker.pid --logfile=/tmp/%n.log

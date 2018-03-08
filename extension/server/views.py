@@ -1,69 +1,55 @@
 from __future__ import unicode_literals
 
-from django.conf import settings
+from rest_framework.decorators import detail_route
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.response import Response
+from rest_framework import mixins, status
 
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-
-from .errors import InvalidRequestError
-from .index import search_index, add_document, process_data
+from .index import search_index
 from .models import Video
-from .serializers import SubsSerializer
-from .utils import handle_response
+from .serializers import SearchSerializer, VideoSerializer
 from .youtube import get_videos_info
 
 
-@api_view(['GET'])
-@handle_response(error_mapping={
-    InvalidRequestError: 400
-})
-def search(request):
-    """
-    View that handles search
-    """
-    qs = request.GET.get(settings.SEARCH_VAR)
-    page = int(request.GET.get(settings.PAGE_VAR) or 1)
-    if qs:
-        total_length, total_pages, ids = search_index(qs, page)
+class VideoViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
+    queryset = Video.objects.all()
+    lookup_field = 'youtube_id'
+    serializer_class = SearchSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return VideoSerializer
+        return self.serializer_class
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        query, page = serializer.validated_data['search'], serializer.validated_data['page']
+        ids, total_results, total_pages = search_index(query, page)
         videos_data = get_videos_info(ids)
-        return {'videos': videos_data, 'total_length': total_length, 'total_pages': total_pages}
-    raise InvalidRequestError(message='Missing query')
 
+        return Response({
+            'videos': videos_data,
+            'total': total_results,
+            'pages': total_pages
+        })
 
-@api_view(['GET'])
-def create_previews(request):
-    from .tasks import create_previews
-    create_previews.apply_async()
-
-
-class VideoViews(APIView):
-    @handle_response()
-    def get(self, request, format=None):
+    @detail_route(methods=['GET'], url_path='')
+    def check(self, request, pk, *args, **kwargs):
         """
-        View that allow to check if video is already indexed
+        Check if video already synchronized
         """
-        # TODO: enhance logic
-        video_id = request.GET.get('id')
-        exist = True
-        if video_id:
-            exist = Video.objects.filter(youtube_id=video_id).exists()
-        return {'exist': exist}
+        return Response({'exist': Video.objects.filter(youtube_id=pk).exists()})
 
-    @handle_response(error_mapping={
-        InvalidRequestError: 400
-    })
-    def post(self, request, format=None):
+    def create(self, request, *args, **kwargs):
         """
-        View that allow to add video to index
+        Submit video for creation
         """
-        subs_data = SubsSerializer(data=request.data)
-        if subs_data.is_valid():
-            data = subs_data.validated_data
-            video_id = data['video_id']
-            if not Video.objects.filter(youtube_id=video_id).exists():
-                data = process_data(data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        video = serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
 
-                add_document(video_id, **data)
-                Video.objects.create(youtube_id=video_id)
-            return {'created': True}
-        raise InvalidRequestError(message='Data is invalid')
+
+
+

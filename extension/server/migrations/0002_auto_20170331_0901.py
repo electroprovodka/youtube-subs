@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='video',
-            name='preview_created',
+            name='has_preview',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
