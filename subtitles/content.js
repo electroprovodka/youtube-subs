@@ -1,17 +1,19 @@
-(function () {
-  var injected = false;
+(() => {
+  let injected = false;
+  console.log('Injection');
   chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    (request, sender, sendResponse) => {
+      console.log('Content');
       if( request.message === 'videoIdToFetch' && !injected) {
         injected = true;
-        var s = document.createElement('script');
+        const s = document.createElement('script');
         s.src = chrome.extension.getURL('script.js');
         (document.head || document.documentElement).appendChild(s);
-
-        document.addEventListener('dataTransmitEvent', function() {
-          var title = document.getElementById('eow-title').textContent;
-          var description = document.getElementById('watch-description-text').textContent;
-          var subs = localStorage.getItem('YOUTUBE_SUBTITLES');
+        document.addEventListener('dataTransmitEvent', () => {
+          console.log('receive back')
+          const title = document.querySelectorAll('.title .ytd-video-primary-info-renderer')[0].textContent;
+          const description = document.getElementById('description').textContent;
+          const subs = localStorage.getItem('YOUTUBE_SUBTITLES');
           chrome.runtime.sendMessage({
             "message": "subsFetched",
             "subs": subs,

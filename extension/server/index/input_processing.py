@@ -20,7 +20,7 @@ def process_xml(xml):
     """
     Process subtitles xml data
     """
-    text = etree.fromstring(xml).xpath('string()')
+    text = etree.fromstring(xml.encode('utf-8')).xpath('string()')
     return process_text(text)
 
 
@@ -30,7 +30,7 @@ def extract_data(data):
     :param data: payload
     :return: encoded payload data
     """
-    return [data[item].encode('utf-8') for item in data_keys]
+    return [data[item] for item in data_keys]
 
 
 def process_data(data):

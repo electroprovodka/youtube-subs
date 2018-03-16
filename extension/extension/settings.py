@@ -187,7 +187,7 @@ INDEX_SEARCH_FIELDS = ['text', 'title', 'description', 'id']
 
 # TODO: find best options
 PREVIEW_PROCESSING_OPTIONS = {
-    'format': 'bestvideo[maxheight <=? 480][ext=webm]/best[ext=webm][max_height <=? 480]',
+    'format': 'bestvideo[height <=? 480][ext=webm]/best[ext=webm][height <=? 480]',
 }
 
 
@@ -199,7 +199,8 @@ AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 
 
 # CELERY SETTINGS
-CELERY_TIMEZONE = 'Europe/Minsk'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
 CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 # CELERY_ACCEPT_CONTENT = ['json']
@@ -211,8 +212,8 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_WORKER_CONCURRENCY = 2
-CELERY_RESULT_EXPIRES = 1
-CELERY_TASK_IGNORE_RESULT = True
+# CELERY_RESULT_EXPIRES = 1
+# CELERY_TASK_IGNORE_RESULT = True
 CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
 CELERY_ACCEPT_CONTENT = ['json']
 
@@ -235,11 +236,11 @@ CELERY_IMPORTS = (
 )
 
 CELERY_BEAT_SCHEDULE = {
-    'create_previews': {
-        'task': 'server.tasks.create_previews',
-        'schedule': 300, #crontab(minute=30, hour=4)
-        'options': {'queue': 'periodic'}
-    }
+    # 'create_previews': {
+    #     'task': 'server.tasks.create_previews',
+    #     'schedule': 300, #crontab(minute=30, hour=4)
+    #     'options': {'queue': 'periodic'}
+    # }
 }
 
 # ----- Log Settings ----- #
@@ -255,7 +256,7 @@ LOG_CONFIG = {
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
         'task': {
-            'format': '[CRON] [%(asctime)s %(levelname)s/%(processName)s] [%(task_id)s] %(message)s',
+            'format': '[CELERY] [%(asctime)s %(levelname)s/%(processName)s] [%(task_id)s] %(message)s',
             '()': 'celery.app.log.TaskFormatter',
         }
     },

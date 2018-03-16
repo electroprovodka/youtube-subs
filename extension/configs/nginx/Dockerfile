@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:alpine
 
-# Copy nginx config
-COPY nginx_proxy.conf /etc/nginx/conf.d/youtubesubs
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx_proxy.conf /etc/nginx/conf.d/proxy.conf

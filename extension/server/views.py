@@ -35,11 +35,11 @@ class VideoViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSe
         })
 
     @detail_route(methods=['GET'], url_path='')
-    def check(self, request, pk, *args, **kwargs):
+    def check(self, request, youtube_id, *args, **kwargs):
         """
         Check if video already synchronized
         """
-        return Response({'exist': Video.objects.filter(youtube_id=pk).exists()})
+        return Response({'exist': Video.objects.filter(youtube_id=youtube_id).exists()})
 
     def create(self, request, *args, **kwargs):
         """

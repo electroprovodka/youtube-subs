@@ -1,30 +1,32 @@
-(function () {
-  var customEvent = document.createEvent('Event');
+(() => {
+  const customEvent = document.createEvent('Event');
   customEvent.initEvent('dataTransmitEvent', true, true);
 
-  function storeSubsInStorage(subs){
+  const storeSubsInStorage = (subs) => {
     localStorage.setItem('YOUTUBE_SUBTITLES', subs);
     document.dispatchEvent(customEvent);
   };
 
-  function spyOnHttp(callback) {
+  const spyOnHttp = (callback) => {
     console.log('spy');
-    var send = XMLHttpRequest.prototype.send;
+    const send = XMLHttpRequest.prototype.send;
 
-    XMLHttpRequest.prototype.send = function () {
-      this.onload = function () {
+    XMLHttpRequest.prototype.send = function(...args) {
+      this.onload = () => {
         callback(this);
       };
-      send.apply(this, arguments);
+      send.apply(this, args);
     };
   };
 
-  function catchSubs(xhr) {
+  const catchSubs = xhr => {
     if (xhr.responseURL.indexOf('timedtext') === -1) {
       return;
     }
+    console.log('Catched');
     storeSubsInStorage(xhr.responseText);
   };
 
   spyOnHttp(catchSubs);
+  console.log('Injected');
 })();

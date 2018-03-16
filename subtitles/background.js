@@ -1,83 +1,56 @@
-function buildPath(path) {
-  return 'http://127.0.0.1/api/'+path
-}
+const buildPath = (path) => 'http://127.0.0.1:8000/api/' + path;
 
-function getVideoId(tabUrl) {
+const getVideoId = (tabUrl) => {
+  // Extract video id form query string
   if (!tabUrl){
     return null;
   }
-  var params = tabUrl.split('?')[1];
-  console.log(params);
-  var splitParams = params.split('&'), videoId;
-  for(var i = 0; i < splitParams.length; i++){
-    if(splitParams[i].indexOf('v=') === 0){
-      return splitParams[i].slice(2);
-    }
+  const url = new URL(tabUrl);
+  return url.searchParams.get('v');
+};
+
+const processResponse = tabId => data => {
+  if(data['exist'] === false){
+    chrome.tabs.sendMessage(tabId, {"message": "videoIdToFetch"});
   }
-}
+  else {
+    // TODO: change icon color
+    console.log('exists');
+  }
+};
 
-function createRequest(method, url, onload, onerror) {
-  var x = new XMLHttpRequest();
-  x.open(method, url)
-  x.onload = onload;
-  x.onerror = onerror;
-  return x
-}
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  // Check if page loaded + it is on youtube video
   if(changeInfo.status === 'complete' && tab.url && tab.url.indexOf('youtube.com/watch') !== -1){
     chrome.pageAction.show(tabId)
     // TODO: check error
-    var videoId = getVideoId(tab.url);
+    const videoId = getVideoId(tab.url);
     if (videoId) {
-      var x = createRequest(
-        'GET',
-        buildPath('video/?id='+videoId),
-        function() {
-          var data = JSON.parse(this.responseText);
-          if(data.data['exist'] === false){
-            chrome.tabs.sendMessage(tabId, {"message": "videoIdToFetch"});
-          }
-          else if(data.data['exist'] === true) {
-            // TODO: change icon color
-            console.log('exists');
-          }
-          else{
-            console.log(this.responseText);
-          }
-        },
-        function() {
-          console.log('Error');
-        }
-      )
-      x.send()
+      fetch(buildPath('video/' + videoId + '/check/')).then(r => r.json()).then(processResponse(tabId))
+      console.log('request');
+
     }
   }
 });
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
+  (request, sender, sendResponse) => {
     if(request.message === "subsFetched"){
-      var videoId = getVideoId(sender.tab.url);
-      var subs = request.subs, title = request.title,
-        descr = request.description;
-      var x = createRequest(
-        'POST',
-        buildPath('video/'),
-        function() {
-          console.log('done');
-        },
-        function() {
-          console.log('error');
-        }
-      );
-      x.setRequestHeader("Content-Type", "application/json");
-      x.send(JSON.stringify({
-        "text": subs,
-        "videoId": videoId,
-        "title": title,
-        "description": descr})
-      );
+      const videoId = getVideoId(sender.tab.url);
+      const subs = request.subs;
+      const title = request.title;
+      const descr = request.description;
+      fetch(buildPath('video/'), {
+        'method': 'POST',
+        'headers': {'Content-Type': 'application/json'},
+        'body': JSON.stringify({
+          "text": subs,
+          "youtubeId": videoId,
+          "title": title,
+          "description": descr})
+      }).then(r => console.log('done'), error => console.log('error'))
     }
   }
 );
+
+console.log('backgroung');

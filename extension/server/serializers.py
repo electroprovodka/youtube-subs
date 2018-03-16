@@ -32,4 +32,4 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class SearchSerializer(serializers.Serializer):
     search = serializers.CharField()
-    page = serializers.IntegerField(required=False, default=0)
+    page = serializers.IntegerField(required=False, default=1)
