@@ -12,10 +12,12 @@
     "default_icon": "catcher.png"
   },
 
+
   "content_scripts": [
     {
       "matches": [
-        "*://*.youtube.com/watch*"
+        "https://www.youtube.com/watch*",
+        "https://youtube.com/watch*"
       ],
       "js": ["content.js"]
     }

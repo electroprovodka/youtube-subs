@@ -46,7 +46,8 @@ class VideoViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSe
         Submit video for creation
         """
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_200_OK)
         video = serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 

@@ -3,6 +3,7 @@
   customEvent.initEvent('dataTransmitEvent', true, true);
 
   const storeSubsInStorage = (subs) => {
+    console.log('Dispatched');
     localStorage.setItem('YOUTUBE_SUBTITLES', subs);
     document.dispatchEvent(customEvent);
   };

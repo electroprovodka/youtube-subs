@@ -9,26 +9,24 @@ const getVideoId = (tabUrl) => {
   return url.searchParams.get('v');
 };
 
-const processResponse = tabId => data => {
+const processResponse = videoId => data => {
   if(data['exist'] === false){
-    chrome.tabs.sendMessage(tabId, {"message": "videoIdToFetch"});
+    console.log('not exists')
   }
   else {
-    // TODO: change icon color
     console.log('exists');
+    // chrome.browserAction.setIcon({path: 'catcher_green.png'});
   }
 };
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // Check if page loaded + it is on youtube video
-  if(changeInfo.status === 'complete' && tab.url && tab.url.indexOf('youtube.com/watch') !== -1){
+  if(changeInfo.status === 'complete' && tab.url && tab.url.indexOf('youtube.com') !== -1){
     chrome.pageAction.show(tabId)
     // TODO: check error
     const videoId = getVideoId(tab.url);
     if (videoId) {
       fetch(buildPath('video/' + videoId + '/check/')).then(r => r.json()).then(processResponse(tabId))
-      console.log('request');
-
     }
   }
 });
@@ -48,7 +46,7 @@ chrome.runtime.onMessage.addListener(
           "youtubeId": videoId,
           "title": title,
           "description": descr})
-      }).then(r => console.log('done'), error => console.log('error'))
+      }).then(r => console.log('done'), error => console.log('error: '+error))
     }
   }
 );
