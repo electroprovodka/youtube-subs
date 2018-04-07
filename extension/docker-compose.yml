@@ -80,8 +80,8 @@ services:
     command: ./run_server.sh
     volumes:
       - .:/app  # mount current directory inside container
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     # set up links so that web knows about db, rabbit
     links:
       - db
@@ -90,26 +90,28 @@ services:
       - db
 
   # Frontend container (static React files, index.html and bundle.js, served with nginx)
-#  frontend:
-#    build: ../subtitles-frontend
-#    volumes:
-#      - ../subtitles-frontend:/app/frontend
-#    container_name: extension_frontend
-#    hostname: frontend
-##    working_dir: /app/frontend
-#    links:
-#      - backend
+  frontend:
+    build: ../subtitles-frontend
+    volumes:
+      - ../subtitles-frontend:/app/frontend
+    container_name: extension_frontend
+    hostname: frontend
+#    working_dir: /app/frontend
+    links:
+      - backend
+    expose:
+      - '80'
 
-  nginx_proxy:
+  nginx:
     build: ./configs/nginx
     container_name: extension_nginx
     # See the file nginx_proxy.conf
     # It uses these links to connect you to the two containers
     links:
       - backend
-#      - frontend
+      - frontend
     ports:
-      - '80:80'
+      - '81:80'
 
 volumes:
   pgdata:

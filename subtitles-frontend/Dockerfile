@@ -9,8 +9,8 @@ RUN npm install
 COPY . /app
 
 # Bundle app source
-RUN npm build
+RUN npm run build
 
 
 FROM nginx:alpine
-COPY --from=frontend /app/build /var/www
+COPY --from=frontend /app/build /usr/share/nginx/html

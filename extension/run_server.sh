@@ -7,5 +7,5 @@ sleep 20
 python manage.py migrate
 # start development server on public ip interface, on port 8000
 
-#gunicorn extension.wsgi:application -w 5 -b :8000
-python manage.py runserver 0.0.0.0:8000 # --noreload
+gunicorn extension.wsgi:application -w 5 -b :8000
+#python manage.py runserver 0.0.0.0:8000 # --noreload

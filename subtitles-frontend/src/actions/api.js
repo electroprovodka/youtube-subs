@@ -23,7 +23,7 @@ const checkStatus = (response) => {
 };
 
 const callApi = ({method, url, body, params}) => {
-	const host = 'http://127.0.0.1:8000';
+	// const host = 'http://127.0.0.1:8000';
 	const headers = new Headers({
 		'Content-Type': 'application/json',
 		Accept: 'application/json',
@@ -36,7 +36,7 @@ const callApi = ({method, url, body, params}) => {
     .map(k => `${esc(k)}=${esc(params[k])}`)
     .join('&');
 
-	const api_url = query ? `${host}${url}?${query}`: url;
+	const api_url = query ? `${url}?${query}`: url;
 	console.log(api_url);
 	// TODO: check other options: mode=cors and etc.
 	return fetch(api_url, {method, body: JSON.stringify(body), headers})
