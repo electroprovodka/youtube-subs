@@ -2,6 +2,7 @@ boto3
 celery
 Django
 django-celery-beat
+django-cors-headers
 djangorestframework
 djangorestframework-camel-case
 djangorestframework-jwt

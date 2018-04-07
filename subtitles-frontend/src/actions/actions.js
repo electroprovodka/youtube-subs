@@ -29,7 +29,7 @@ const submitSearch = () => (dispatch, getState) => {
 	}
 	dispatch(searchRequested());
 	console.log(query);
-	return get('/api/search/', {q:query})
+	return get('/api/video/', {search:query})
     .then(data => {
     	dispatch(searchReceived(data));
     	return data;
@@ -52,7 +52,7 @@ const requestPage = (nextPage) => (dispatch, getState) => {
 	dispatch(pageChangeRequested(nextPage));
   // TODO: what if we change query but not submit and then change page
   // TODO: find other way to add params
-	return get('/api/search/', {q: query, page: nextPage})
+	return get('/api/video/', {search: query, page: nextPage})
     .then(data=> {
     	dispatch(pageChangeReceived(data));
     	return data;

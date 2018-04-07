@@ -15,7 +15,7 @@ export const defaultUserState = {
 export const YOUTUBE_VIDEO_URL = 'https://YouTube.com/watch?v=';
 
 export const API_HOST = 'backend';
-export const FRONTEND_HOST = '127.0.0.1';
+export const FRONTEND_HOST = 'localhost';
 
 export const GOOGLE_CLIENT_ID = '790338504567-lvr7lrt2oe9lk1mn4ba05faulr4ujbja.apps.googleusercontent.com';
 

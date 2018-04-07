@@ -15,7 +15,7 @@ import {
   CLEAR_VIDEOS,
   ERROR_RECEIVED
 } from '../actions/constants';
-import { defaultDataState, defaultUserState} from '../constants'
+import { defaultDataState, defaultUserState } from '../constants'
 
 // TODO: move to other location
 const get_default_user_state = () => {

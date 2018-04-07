@@ -31,8 +31,8 @@ export const searchReceived = (data) => {
 	return {
 		type: SEARCH_RECEIVED,
 		videos: data.videos,
-		totalLength: data.totalLength,
-		totalPages: data.totalPages
+		totalLength: data.total,
+		totalPages: data.pages
 	};
 };
 
@@ -47,7 +47,7 @@ export const pageChangeReceived = (data) => {
 	return {
 		type: PAGE_CHANGE_RECEIVED,
 		videos: data.videos,
-		totalLength: data.totalLength
+		totalLength: data.total
 	};
 };
 

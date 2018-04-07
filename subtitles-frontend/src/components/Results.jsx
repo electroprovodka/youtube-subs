@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment/moment';
 // import { Player, ControlBar, BigPlayButton, LoadingSpinner } from 'video-react';
 import { connect } from 'react-redux';
 import { Media, Image, Grid, Row, Col, Pagination, Button } from 'react-bootstrap';
@@ -9,7 +10,7 @@ import PageLayout from './PageLayout.jsx';
 import SearchBar from './SearchBar.jsx';
 import PageTitle from './PageTitle.jsx';
 
-import {getYoutubeUrl} from '../utils';
+import {getYoutubeUrl, getChannelUrl } from '../utils';
 
 
 const Description = ({text}) => {
@@ -43,7 +44,7 @@ class VideoPreview extends React.Component {
 	render() {
 		const {
 			thumbnail,
-			preview
+			previewUrl
 		} = this.props;
 
 		return (
@@ -52,10 +53,10 @@ class VideoPreview extends React.Component {
 				onMouseOut={this.handleMouseOut}>
 				{
 					// TODO: move to separate components
-					this.state.isHovering && preview.exists
+					this.state.isHovering && previewUrl
 					? <video loop autoPlay width="256" height="auto"
 						poster={thumbnail.url} >
-						<source src={preview.url} type="video/webm"></source>
+						<source src={previewUrl} type="video/webm"></source>
 					</video>
 					: <Image width={256}
 						src={thumbnail.url} thumbnail responsive />
@@ -71,18 +72,21 @@ const Video = (props) => {
     title,
     description,
     thumbnail,
-    publishDate,
-    channelInfo,
-		preview
+    publishedAt,
+    channelName,
+		channelId,
+		previewExists,
+		previewUrl
     // tags
   } = props;
 	const videoUrl = getYoutubeUrl(id);
+	const channelUrl = getChannelUrl(channelId);
 	return (
     <div className="video">
       <Grid>
         <Row>
           <Col md={3}>
-            <VideoPreview thumbnail={thumbnail} preview={preview}/>
+            <VideoPreview thumbnail={thumbnail} previewUrl={previewUrl}/>
           </Col>
           <Col md={9}>
             <Row className="title">
@@ -95,10 +99,12 @@ const Video = (props) => {
             </Row>
 						<Row className="bottom-line">
 							<Col md={3}>
-								Author: {channelInfo.name}
+								<Button bsStyle="link" target="_blank" href={channelUrl}>
+									<Media.Heading>Author: {channelName}</Media.Heading>
+								</Button>
 							</Col>
 							<Col md={4}>
-								Published: {publishDate}
+								Published: {moment(publishedAt).format('MMMM Do YYYY, h:mm:ss a')}
 							</Col>
 						</Row>
           </Col>

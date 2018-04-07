@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'server.apps.ServerConfig',
     'django_celery_beat',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -152,6 +154,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+CORS_ORIGIN_WHITELIST = [
+    'localhost:3000',
+]
+
 
 INDEX_DIR = os.path.join(BASE_DIR, 'index')
 
@@ -236,11 +242,11 @@ CELERY_IMPORTS = (
 )
 
 CELERY_BEAT_SCHEDULE = {
-    # 'create_previews': {
-    #     'task': 'server.tasks.create_previews',
-    #     'schedule': 300, #crontab(minute=30, hour=4)
-    #     'options': {'queue': 'periodic'}
-    # }
+    'create_previews': {
+        'task': 'server.tasks.create_previews',
+        'schedule': 300, #crontab(minute=30, hour=4)
+        'options': {'queue': 'periodic'}
+    }
 }
 
 # ----- Log Settings ----- #

@@ -1,17 +1,16 @@
-FROM node:6.9
+FROM node:6.9 as frontend
 
 WORKDIR /app
 
 COPY package.json /app
 
-# Bundle app source
-RUN npm install && \
-    npm install -g pushstate-server
+RUN npm install
 
 COPY . /app
-# RUN npm run build
 
-EXPOSE 3000
+# Bundle app source
+RUN npm build
 
-# defined in package.json
-CMD [ "npm", "start" ]
+
+FROM nginx:alpine
+COPY --from=frontend /app/build /var/www
