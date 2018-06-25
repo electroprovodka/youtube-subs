@@ -20,6 +20,8 @@ def create_preview(youtube_id):
 
 @shared_task(ignore_results=True, queue='manual', name='server.tasks.store_preview_url')
 def store_preview_url(url, video_id):
+    if url is None:
+        return
     Video.objects.filter(id=video_id, has_preview=False).update(preview_url=url, has_preview=True)
 
 

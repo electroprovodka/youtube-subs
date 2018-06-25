@@ -1,11 +1,9 @@
 (() => {
-  const customEvent = document.createEvent('Event');
-  customEvent.initEvent('dataTransmitEvent', true, true);
+  const customEvent = 'dataTransmitEvent';
 
-  const storeSubsInStorage = (subs) => {
+  const sendSubs = (subs) => {
     console.log('Dispatched');
-    localStorage.setItem('YOUTUBE_SUBTITLES', subs);
-    document.dispatchEvent(customEvent);
+    document.dispatchEvent(new CustomEvent(customEvent, {detail: subs}));
   };
 
   const spyOnHttp = (callback) => {
@@ -25,7 +23,7 @@
       return;
     }
     console.log('Catched');
-    storeSubsInStorage(xhr.responseText);
+    sendSubs(xhr.responseText);
   };
 
   spyOnHttp(catchSubs);

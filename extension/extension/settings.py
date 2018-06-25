@@ -197,9 +197,9 @@ PREVIEW_PROCESSING_OPTIONS = {
 }
 
 
-S3_BUCKET_NAME = 'youtubesubs'
+S3_BUCKET_NAME = 'youtube-subs'
 S3_PREVIEWS_FOLDER = 'previews'
-S3_BASE_URL = 'https://s3.eu-central-1.amazonaws.com'
+S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com'
 AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 

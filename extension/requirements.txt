@@ -8,7 +8,6 @@ djangorestframework-camel-case
 djangorestframework-jwt
 ffmpy
 flower
-google
 google-api-python-client
 gunicorn
 lxml

@@ -1,4 +1,4 @@
-const buildPath = (path) => 'http://127.0.0.1:8000/api/' + path;
+const buildPath = (path) => 'http://127.0.0.1:81/api/' + path;
 
 const getVideoId = (tabUrl) => {
   // Extract video id form query string
@@ -26,7 +26,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // TODO: check error
     const videoId = getVideoId(tab.url);
     if (videoId) {
-      fetch(buildPath('video/' + videoId + '/check/')).then(r => r.json()).then(processResponse(tabId))
+      fetch(buildPath(`video/${videoId}/check/`)).then(r => r.json()).then(processResponse(tabId))
     }
   }
 });
